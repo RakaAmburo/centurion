@@ -128,5 +128,5 @@ wsClient.start("192.168.1.133", "")
 
 setInterval(function () {
   wsClient.send("to the server");
-}, 60000*60);
+}, 60000 * 60 * 4);
 
