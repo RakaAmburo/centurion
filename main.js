@@ -189,7 +189,7 @@ server.listen(8888, function () {
     let host = server.address().address
     let port = server.address().port
 
-    //gralUtils.logInfo(`Started voice command app, listening at port ${port}`)
+    gralUtils.logInfo(`Started voice command app, listening at port ${port}`)
 
 })
 
