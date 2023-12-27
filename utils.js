@@ -19,7 +19,7 @@ utils.executeInLocal = async (cmd) => {
     console.log(`Command: (${cmd}) -> OK`)
 }
 
-gralUtils.executeInLocalWithOut = async (cmd) => {
+utils.executeInLocalWithOut = async (cmd) => {
     try {
         const { stdout, stderr } = await execAsync(cmd)
         console.log('stdout:', stdout);
@@ -31,17 +31,17 @@ gralUtils.executeInLocalWithOut = async (cmd) => {
     console.log(`Command: (${cmd}) -> OK`)
 }
 
-gralUtils.logInfo = async (msg) => {
+utils.logInfo = async (msg) => {
     let date = moment().format(dateFormat)
     console.log(date + " -> " + msg)
 }
 
-gralUtils.logError = async (msg) => {
+utils.logError = async (msg) => {
     let date = moment().format(dateFormat)
     console.error(date + " -> " + msg)
 }
 
-gralUtils.getLocalIp = () => {
+utils.getLocalIp = () => {
     for (const name of Object.keys(nets)) {
         for (const net of nets[name]) {
             if (net.family === 'IPv4' && !net.internal) {
@@ -53,9 +53,9 @@ gralUtils.getLocalIp = () => {
     return 0
 }
 
-gralUtils.wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+utils.wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-gralUtils.retartApp = (seconds) => {
+utils.retartApp = (seconds) => {
     setTimeout(() => {
         process.exit(0);
     }, seconds * 1000);
