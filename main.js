@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 const rateLimit = require('ws-rate-limit')
 var limiter = rateLimit('10s', 20)
-const gralUtils = require('./gralUtils');
+const utils = require('./utils');
 
 var privateKey = fs.readFileSync(__dirname + '/certs/server.key', 'utf8');
 var certificate = fs.readFileSync(__dirname + '/certs/server.crt', 'utf8');
@@ -14,16 +14,16 @@ var options = {
     key: privateKey,
     cert: certificate,
     ca: clientCert,
-    requestCert: false
+    requestCert: true
 };
 var server = https.createServer(options, app)
 
-// web socket
+/* WEB SOCKET CONFIG START */
 const wsConns = new Map();
 //checker.setWsConns(wsConns)
 function noop() { }
 function heartbeat() {
-    gralUtils.logInfo("heartbeat server")
+    utils.logInfo("heartbeat server")
     this.isAlive = true;
 }
 const wss = new WebSocket.Server({
@@ -52,7 +52,6 @@ const wss = new WebSocket.Server({
 
 });
 server.on('upgrade', function upgrade(request, socket, head) {
-    //const pathname = url.parse(request.url).pathname;
     wss.handleUpgrade(request, socket, head, function done(ws) {
         wss.emit('connection', ws, request);
     });
@@ -81,18 +80,19 @@ const respObserver = (timeout, errMessage) => {
 
 wss.on('connection', function connection(ws, req) {
 
+    // limit requests -> 2 per second
     limiter(ws)
 
     ws.isAlive = true;
     ws.on('pong', heartbeat);
 
     let clientId = req.headers['client-id']
-    gralUtils.logInfo("ws connected " + clientId)
+    utils.logInfo("ws connected " + clientId)
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
 
     ws.on('message', function incoming(msg) {
-        gralUtils.logInfo("incomming raw msg: " + msg)
+        utils.logInfo("incomming raw msg: " + msg)
         ws.send("received")
         /* if (validator.protocolCheck(msg)){
             let message = validator.comProtExtract(msg).data
@@ -118,25 +118,25 @@ wss.on('connection', function connection(ws, req) {
     });
 
     ws.on('limited', msg => {
-        gralUtils.logInfo('Rate limit activated!')
-        console.log(JSON.stringify(req.headers))
+        utils.logInfo('Rate limit activated!')
+        utils.logInfo(JSON.stringify(req.headers))
         ws.send('I got your information.');
     })
 
     ws.on('close', function close() {
-        gralUtils.logInfo(clientId + ' ws closed')
+        utils.logInfo(clientId + ' ws closed')
         wsConns.delete(clientId)
     });
 
     ws.on('error', function (err) {
-        gralUtils.logError('ws error: ' + err);
+        utils.logError('ws error: ' + err);
     });
 });
 
+/* ping heartbeat interval, terminates the connections if idle */
 const interval = setInterval(function ping() {
     wss.clients.forEach(function each(ws) {
         if (ws.isAlive === false) return ws.terminate();
-
         ws.isAlive = false;
         ws.ping(noop);
     });
@@ -145,11 +145,11 @@ const interval = setInterval(function ping() {
 wss.on('close', function close() {
     clearInterval(interval);
 });
-
-// web socket
+/* WEB SOCKET CONFIG END */
 
 app.use(express.json());
 
+/* validates each request with token */
 var validate = async (req, res, next) => {
     //gralUtils.logInfo("endpint auth token: " + req.headers['authorization'])
     try {
@@ -180,7 +180,7 @@ app.use(function (req, res, next) {
     res.status(404).send({
         status: 404,
         message: 'you have nothing to do here! you will be banned',
-        type: 'just4idiots'
+        type: 'just4lelos'
     })
 })
 
@@ -189,7 +189,7 @@ server.listen(8888, function () {
     let host = server.address().address
     let port = server.address().port
 
-    gralUtils.logInfo(`Started voice command app, listening at port ${port}`)
+    utils.logInfo(`Started voice command app, listening at port ${port}`)
 
 })
 

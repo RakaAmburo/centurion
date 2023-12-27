@@ -1,22 +1,18 @@
 const WebSocket = require('ws');
 const fs = require('fs');
-
-
-
-
-const gralUtils = require('./gralUtils');
-
+const utils = require('./utils');
 
 var privateKey = fs.readFileSync(__dirname + '/certs/client-key.pem', 'utf8');
 var certificate = fs.readFileSync(__dirname + '/certs/client-crt.pem', 'utf8');
 
+const serverIp = "192.168.1.133"
 const wsClient = []
 var stopping = false;
 var failedConnectionsTries = 0
 
 function noop() { }
 function heartbeat() {
-  gralUtils.logInfo(`heartbeat client`);
+  utils.logInfo(`heartbeat client`);
   clearTimeout(this.pingTimeout);
   this.pingTimeout = setTimeout(() => {
     this.terminate();
@@ -30,7 +26,7 @@ var wss
 wsClient.start = (ip, st) => {
   currentConnStatus = st
   tryedIp = ip
-  gralUtils.logInfo('connecting ws to ' + ip)
+  utils.logInfo('connecting ws to ' + ip)
   let wsPort = 8888
   wss = new WebSocket(`wss://${ip}:${wsPort}`, {
     protocolVersion: 8,
@@ -48,16 +44,16 @@ wsClient.start = (ip, st) => {
       this.terminate();
     }, 30000 + 1000);
     lastUsedIp = tryedIp */
-    gralUtils.logInfo('socket client open');
+    utils.logInfo('socket client open');
   });
 
   wss.on('ping', heartbeat);
 
   wss.on('close', async function () {
-    gralUtils.logInfo(`ws connection to  closed`);
+    utils.logInfo(`ws connection to  closed`);
     clearTimeout(this.pingTimeout);
     await sleep(10000)
-    wsClient.start("192.168.1.133", "status")
+    wsClient.start(serverIp, "status")
     /* clearTimeout(this.pingTimeout);
     let useIp = (lastUsedIp) ? lastUsedIp : tryedIp
     gralUtils.logInfo(`ws connection to ${useIp} closed`);
@@ -70,31 +66,27 @@ wsClient.start = (ip, st) => {
   });
 
   wss.on('error', function (error) {
-    
-    gralUtils.logError("Socket client error: " + error.message)
+
+    utils.logError("Socket client error: " + error.message)
   });
 
   wss.on('message', function incoming(message) {
-    gralUtils.logInfo("incomming raw msg: " + message);
-     /* if (!validator.protocolCheck(message)) {
-      gralUtils.logInfo('Wrong communication protocols structure!')
-    } else {
-      let action = validator.comProtExtract(message).data
-      if (action.startsWith('connect2home:')) {
-        let ipAndstatus = action.replace("connect2home:", "").split(':')
-        gralUtils.logInfo("Trying to desconnect ws from aws and connect home")
-        wsClient.stop()
-        setTimeout(() => {
-          wsClient.start(ipAndstatus[0], ipAndstatus[1])
-        }, 10000);
-      }
-
-      let comProt = validator.getComProt(); 
-
-      
-
-      gralUtils.logInfo("Exec action: " + action);
-    } */
+    utils.logInfo("incomming raw msg: " + message);
+    /* if (!validator.protocolCheck(message)) {
+     gralUtils.logInfo('Wrong communication protocols structure!')
+   } else {
+     let action = validator.comProtExtract(message).data
+     if (action.startsWith('connect2home:')) {
+       let ipAndstatus = action.replace("connect2home:", "").split(':')
+       gralUtils.logInfo("Trying to desconnect ws from aws and connect home")
+       wsClient.stop()
+       setTimeout(() => {
+         wsClient.start(ipAndstatus[0], ipAndstatus[1])
+       }, 10000);
+     }
+     let comProt = validator.getComProt(); 
+     gralUtils.logInfo("Exec action: " + action);
+   } */
 
   });
 
@@ -124,7 +116,7 @@ function sleep(ms) {
   });
 }
 
-wsClient.start("192.168.1.133", "")
+wsClient.start(serverIp, "")
 
 setInterval(function () {
   wsClient.send("to the server");
