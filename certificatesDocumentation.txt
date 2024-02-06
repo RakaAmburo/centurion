@@ -1,0 +1,30 @@
+//Create certificates for the server
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt -subj "/C=ES/ST=BA/L=Lehi/O=MYCOMP, Inc./OU=BA/CN=automation.xyz"
+
+//Create certificates for the clients
+openssl req -new -passout pass:"PedritoClavo1Clavito" -x509 -days 365 -keyout client-ca-key.pem -out client-ca-crt.pem -subj "/C=ES/ST=BA/L=Lehi/O=MYCOMP, Inc./OU=BA/CN=automation.xyz"
+openssl genrsa -out client-key.pem 4096
+openssl req -new -sha256 -key client-key.pem -out client-csr.pem -subj "/C=ES/ST=BA/L=Lehi/O=MYCOMP, Inc./OU=BA/CN=client.automation.xyz"
+openssl x509 -req -days 365 -in client-csr.pem -CA client-ca-crt.pem -CAkey client-ca-key.pem -CAcreateserial -out client-crt.pem -passin pass:"PedritoClavo1Clavito"
+openssl verify -CAfile client-ca-crt.pem client-crt.pem
+
+//Create certificates for Android
+openssl pkcs12 -passout pass:"PedritoClavo1Clavito" -export -in client-crt.pem -inkey client-key.pem -out android.p12 -passin pass:"PedritoClavo1Clavito"
+keytool -importkeystore -srckeystore android.p12 -srcstorepass PedritoClavo1Clavito -srcstoretype pkcs12 -destkeystore android.bks -deststorepass PedritoClavo1Clavito -deststoretype bks -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath "/home/pablo/newTest/bcprov-ext-jdk15on-169.jar"
+keytool -list -keystore "android.bks" -provider org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath "/home/user/newTest/bcprov-ext-jdk15on-169.jar" -storetype BKS -storepass PedritoClavo1Clavito
+
+
+//Sources
+https://www.matteomattei.com/client-and-server-ssl-mutual-authentication-with-nodejs/
+https://blog.applegrew.com/2015/04/using-pinned-self-signed-ssl-certificate-with-android-volley/
+https://stackoverflow.com/questions/56626547/how-to-create-bks-file-from-crt-in-2019-with-windows-10
+https://stackoverflow.com/questions/4065379/how-to-create-a-bks-bouncycastle-format-java-keystore-that-contains-a-client-c
+https://docs.wso2.com/display/EMM200/Generating+a+BKS+File+for+Android
+
+
+key: fs.readFileSync(`${__dirname}/certs/server-key.pem`),
+cert: fs.readFileSync(`${__dirname}/certs/server-crt.pem`),
+
+openssl in windows
+https://stackoverflow.com/questions/50625283/how-to-install-openssl-in-windows-10
+choco install openssl
