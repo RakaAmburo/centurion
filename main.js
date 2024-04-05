@@ -169,7 +169,7 @@ app.use(validate)
 app.post('/exec', async (req, res, next) => {
 
     let response
-    response = "test"//await postHanler(req)
+    response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"//await postHanler(req)
     //gralUtils.logInfo(JSON.stringify(response))
     res.json(response)
 
