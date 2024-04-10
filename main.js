@@ -7,9 +7,11 @@ const rateLimit = require('ws-rate-limit')
 var limiter = rateLimit('10s', 20)
 const utils = require('./utils');
 
-var privateKey = fs.readFileSync(__dirname + '/certs/server.key', 'utf8');
-var certificate = fs.readFileSync(__dirname + '/certs/server.crt', 'utf8');
-var clientCert = [fs.readFileSync(__dirname + '/certs/client-ca-crt.pem', 'utf8')]
+var severity = 3;
+
+var privateKey = fs.readFileSync(__dirname + '/certs/SAN/server.key', 'utf8');
+var certificate = fs.readFileSync(__dirname + '/certs/SAN/server.crt', 'utf8');
+var clientCert = [fs.readFileSync(__dirname + '/certs/SAN/client-ca-crt.pem', 'utf8')]
 var options = {
     key: privateKey,
     cert: certificate,
@@ -93,6 +95,9 @@ wss.on('connection', function connection(ws, req) {
 
     ws.on('message', function incoming(msg) {
         utils.logInfo("incomming raw msg: " + msg)
+        if (msg == "alert bath"){
+          severity = 1;
+        }
         ws.send("received")
         /* if (validator.protocolCheck(msg)){
             let message = validator.comProtExtract(msg).data
@@ -171,7 +176,8 @@ app.post('/exec', async (req, res, next) => {
     let response
     //response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"
     //await postHanler(req)
-    response = {"events":[{"id":"someId", "severity":"1", "message":"All good!"}]}
+    response = {"events":[{"id":"someId", "severity":severity, "message":"All good!"}]}
+    severity = 3;
     //gralUtils.logInfo(JSON.stringify(response))
     res.json(response)
 
