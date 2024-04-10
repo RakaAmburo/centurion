@@ -2,10 +2,10 @@ const WebSocket = require('ws');
 const fs = require('fs');
 const utils = require('./utils');
 
-var privateKey = fs.readFileSync(__dirname + '/certs/client-key.pem', 'utf8');
-var certificate = fs.readFileSync(__dirname + '/certs/client-crt.pem', 'utf8');
+var privateKey = fs.readFileSync(__dirname + '/certs/SAN/client-key.pem', 'utf8');
+var certificate = fs.readFileSync(__dirname + '/certs/SAN/client-crt.pem', 'utf8');
 
-const serverIp = "192.168.1.133"
+const serverIp = "217.71.203.118"
 const wsClient = []
 var stopping = false;
 var failedConnectionsTries = 0

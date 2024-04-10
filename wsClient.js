@@ -1,11 +1,13 @@
 const WebSocket = require('ws');
 const fs = require('fs');
 const utils = require('./utils');
+const express = require('express');
+const app = express();
 
-var privateKey = fs.readFileSync(__dirname + '/certs/client-key.pem', 'utf8');
-var certificate = fs.readFileSync(__dirname + '/certs/client-crt.pem', 'utf8');
+var privateKey = fs.readFileSync(__dirname + '/certs/SAN/client-key.pem', 'utf8');
+var certificate = fs.readFileSync(__dirname + '/certs/SAN/client-crt.pem', 'utf8');
 
-const serverIp = "192.168.1.133"
+const serverIp = "217.71.203.118"
 const wsClient = []
 var stopping = false;
 var failedConnectionsTries = 0
@@ -102,7 +104,7 @@ wsClient.stop = () => {
 
 wsClient.send = (message) => {
   if (wsClient.isConnected) {
-    wss.send("testing")
+    wss.send(message)
   }
 }
 
@@ -122,3 +124,14 @@ setInterval(function () {
   wsClient.send("to the server");
 }, 60000 * 60 * 4);
 
+//http server
+app.use(express.json());
+app.post('/alert', (req, res) => {
+  wsClient.send(req.body.message);
+  res.json({});
+});
+
+const PORT = process.env.PORT || 8181;
+app.listen(PORT, () => {
+  console.log(`Servidor JSON corriendo en el puerto ${PORT}`);
+});
