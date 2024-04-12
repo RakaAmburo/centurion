@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const fs = require('fs');
-const utils = require('./utils');
+const utils = require('./utils').default;
 const express = require('express');
 const app = express();
 

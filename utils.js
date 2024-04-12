@@ -1,10 +1,11 @@
-const fs = require('fs')
-const { exec } = require('child_process');
-const { promisify } = require('util');
+import fs from 'fs';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 const execAsync = promisify(exec);
-const moment = require('moment')
-const { networkInterfaces } = require('os');
+import moment from 'moment';
+import { networkInterfaces } from 'os';
 const nets = networkInterfaces();
+
 
 const dateFormat = 'D-MM-YY|HH:mm:ss';
 const utils = []
@@ -62,4 +63,4 @@ utils.retartApp = (seconds) => {
     return `restarting in ${seconds} secs!`
 }
 
-module.exports = utils
+export default utils

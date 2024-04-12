@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const fs = require('fs');
-const utils = require('./utils');
+const utils = require('./utils').default;
 
 var privateKey = fs.readFileSync(__dirname + '/certs/SAN/client-key.pem', 'utf8');
 var certificate = fs.readFileSync(__dirname + '/certs/SAN/client-crt.pem', 'utf8');

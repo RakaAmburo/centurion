@@ -1,34 +1,44 @@
-const https = require('https');
-const WebSocket = require('ws');
-const fs = require('fs');
-const express = require('express');
+import { createServer } from 'https';
+import  { WebSocketServer } from 'ws';
+import { readFileSync } from 'fs';
+import express, { json } from 'express';
 const app = express();
-const rateLimit = require('ws-rate-limit')
+import rateLimit from 'ws-rate-limit';
 var limiter = rateLimit('10s', 20)
-const utils = require('./utils');
+import util from './utils.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import properties from './securedPropertiesMock.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+console.log(properties.scrambledLetters)
 
 var severity = 3;
 
-var privateKey = fs.readFileSync(__dirname + '/certs/SAN/server.key', 'utf8');
-var certificate = fs.readFileSync(__dirname + '/certs/SAN/server.crt', 'utf8');
-var clientCert = [fs.readFileSync(__dirname + '/certs/SAN/client-ca-crt.pem', 'utf8')]
+var privateKey = readFileSync(__dirname + '/certs/SAN/server.key', 'utf8');
+var certificate = readFileSync(__dirname + '/certs/SAN/server.crt', 'utf8');
+var clientCert = [readFileSync(__dirname + '/certs/SAN/client-ca-crt.pem', 'utf8')]
 var options = {
     key: privateKey,
     cert: certificate,
     ca: clientCert,
     requestCert: true
 };
-var server = https.createServer(options, app)
+var server = createServer(options, app)
 
 /* WEB SOCKET CONFIG START */
 const wsConns = new Map();
 //checker.setWsConns(wsConns)
 function noop() { }
-function heartbeat() {
-    utils.logInfo("heartbeat server")
-    this.isAlive = true;
+class heartbeat {
+    constructor() {
+        util.logInfo("heartbeat server");
+        this.isAlive = true;
+    }
 }
-const wss = new WebSocket.Server({
+const wss = new  WebSocketServer({
     noServer: true,
     maxPayload: 450,
     verifyClient: async (info, callback) => {
@@ -89,12 +99,12 @@ wss.on('connection', function connection(ws, req) {
     ws.on('pong', heartbeat);
 
     let clientId = req.headers['client-id']
-    utils.logInfo("ws connected " + clientId)
+    util.logInfo("ws connected " + clientId)
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
 
     ws.on('message', function incoming(msg) {
-        utils.logInfo("incomming raw msg: " + msg)
+        util.logInfo("incomming raw msg: " + msg)
         if (msg == "alert bath"){
           severity = 1;
         }
@@ -123,18 +133,18 @@ wss.on('connection', function connection(ws, req) {
     });
 
     ws.on('limited', msg => {
-        utils.logInfo('Rate limit activated!')
-        utils.logInfo(JSON.stringify(req.headers))
+        util.logInfo('Rate limit activated!')
+        util.logInfo(JSON.stringify(req.headers))
         ws.send('I got your information.');
     })
 
     ws.on('close', function close() {
-        utils.logInfo(clientId + ' ws closed')
+        util.logInfo(clientId + ' ws closed')
         wsConns.delete(clientId)
     });
 
     ws.on('error', function (err) {
-        utils.logError('ws error: ' + err);
+        util.logError('ws error: ' + err);
     });
 });
 
@@ -152,7 +162,7 @@ wss.on('close', function close() {
 });
 /* WEB SOCKET CONFIG END */
 
-app.use(express.json());
+app.use(json());
 
 /* validates each request with token */
 var validate = async (req, res, next) => {
@@ -197,7 +207,7 @@ server.listen(8888, function () {
     let host = server.address().address
     let port = server.address().port
 
-    utils.logInfo(`Started voice command app, listening at port ${port}`)
+    util.logInfo(`Started voice command app, listening at port ${port}`)
 
 })
 
