@@ -1,3 +1,4 @@
+import properties from './securedProperties.js';
 import WebSocket from 'ws';
 import { readFileSync } from 'fs';
 import utils from './utils.js';
@@ -11,7 +12,7 @@ const __dirname = dirname(__filename);
 var privateKey = readFileSync(__dirname + '/certs/SAN/client-key.pem', 'utf8');
 var certificate = readFileSync(__dirname + '/certs/SAN/client-crt.pem', 'utf8');
 
-const serverIp = "217.71.203.118"
+const serverIp = properties.centurionIp
 const wsClient = []
 var stopping = false;
 var failedConnectionsTries = 0

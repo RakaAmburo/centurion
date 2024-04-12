@@ -29,6 +29,8 @@ class properties {
     static scrambledLetters = "xwpqVrURTfXckMunaighzFNlvIABdmCEPYDLGbQtojyZseOHJWSK"
     //SCRAMBLED_END
     static letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    static centurionIp = "200.61.34.21"
 }
 
 export default properties
