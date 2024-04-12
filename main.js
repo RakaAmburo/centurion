@@ -33,8 +33,8 @@ const wsConns = new Map();
 //checker.setWsConns(wsConns)
 function noop() { }
 
-const heartbeat = () => {
-    util.logInfo("heartbeat server");
+function heartbeat() {
+    util.logInfo("heartbeat server")
     this.isAlive = true;
 }
 
