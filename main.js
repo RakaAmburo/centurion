@@ -1,5 +1,5 @@
 import { createServer } from 'https';
-import  { WebSocketServer } from 'ws';
+import { WebSocketServer } from 'ws';
 import { readFileSync } from 'fs';
 import express, { json } from 'express';
 const app = express();
@@ -32,13 +32,13 @@ var server = createServer(options, app)
 const wsConns = new Map();
 //checker.setWsConns(wsConns)
 function noop() { }
-class heartbeat {
-    constructor() {
-        util.logInfo("heartbeat server");
-        this.isAlive = true;
-    }
+
+const heartbeat = () => {
+    util.logInfo("heartbeat server");
+    this.isAlive = true;
 }
-const wss = new  WebSocketServer({
+
+const wss = new WebSocketServer({
     noServer: true,
     maxPayload: 450,
     verifyClient: async (info, callback) => {
@@ -105,8 +105,8 @@ wss.on('connection', function connection(ws, req) {
 
     ws.on('message', function incoming(msg) {
         util.logInfo("incomming raw msg: " + msg)
-        if (msg == "alert bath"){
-          severity = 1;
+        if (msg == "alert bath") {
+            severity = 1;
         }
         ws.send("received")
         /* if (validator.protocolCheck(msg)){
@@ -186,7 +186,7 @@ app.post('/exec', async (req, res, next) => {
     let response
     //response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"
     //await postHanler(req)
-    response = {"events":[{"id":"someId", "severity":severity, "message":"All good!"}]}
+    response = { "events": [{ "id": "someId", "severity": severity, "message": "All good!" }] }
     severity = 3;
     //gralUtils.logInfo(JSON.stringify(response))
     res.json(response)
