@@ -206,7 +206,7 @@ app.post('/exec', async (req, res, next) => {
     let response
     //response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"
     //await postHanler(req)
-    response = { "events": [{ "id": "someId", "severity": severity, "message": "All good!" }] }
+    response = { "events": [{ "id": "someId", "severity": severity, "message": message }] }
     severity = 3;
     //gralUtils.logInfo(JSON.stringify(response))
     res.json(response)
