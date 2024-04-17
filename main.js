@@ -164,7 +164,7 @@ wss.on('close', function close() {
 
 app.use(json());
 
-/* validates each request with token */
+/* validates each request with a token */
 var validate = async (req, res, next) => {
     //gralUtils.logInfo("endpint auth token: " + req.headers['authorization'])
     try {
@@ -181,8 +181,28 @@ var validate = async (req, res, next) => {
 }
 app.use(validate)
 
+// Lista negra de direcciones IP bloqueadas
+const blacklistedIPs = new Set();
+// Middleware para verificar la dirección IP
+app.use((req, res, next) => {
+    const clientIP = req.ip;
+    // Verificar si la dirección IP está en la lista negra
+    if (blacklistedIPs.has(clientIP)) {
+        // Si la IP está en la lista negra, responder con un mensaje de error
+        return res.status(403).send('Tu dirección IP ha sido bloqueada temporalmente.');
+    }
+    // Si la IP no está en la lista negra, continuar con la solicitud
+    next();
+});
+
+
 app.post('/exec', async (req, res, next) => {
 
+    let message = "All good!"
+    if (!wsConns.get("raspberry")){
+        severity = 1
+        message = "raspberry not connected!"
+    }
     let response
     //response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"
     //await postHanler(req)

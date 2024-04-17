@@ -41,7 +41,7 @@ wsClient.start = (ip, st) => {
     rejectUnauthorized: false,
     key: privateKey,
     cert: certificate,
-    headers: { "authorization": "12345", "client-id": 'asus' }
+    headers: { "authorization": "12345", "client-id": 'raspberry' }
   });
 
   wss.on('open', function () {
