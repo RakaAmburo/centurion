@@ -105,6 +105,7 @@ wss.on('connection', function connection(ws, req) {
     wsConns.set(clientId, { ws, obs })
 
     ws.on('message', function incoming(payload) {
+        payload = String(payload)
         util.logInfo("incomming raw msg: " + payload)
         if (validator.protocolCheck(String(payload))) {
             if (validator.protocolExtract(payload).message == "alert bath") {
