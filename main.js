@@ -8,13 +8,10 @@ var limiter = rateLimit('10s', 20)
 import util from './utils.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import properties from './securedPropertiesMock.js';
 import validator from './securityUtils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-console.log(properties.scrambledLetters)
 
 var severity = 3;
 
@@ -105,7 +102,7 @@ wss.on('connection', function connection(ws, req) {
     wsConns.set(clientId, { ws, obs })
 
     ws.on('message', function incoming(payload) {
-        payload = String(payload)
+        payload = payload.toString()
         util.logInfo("incomming raw msg: " + payload)
         if (validator.protocolCheck(String(payload))) {
             if (validator.protocolExtract(payload).message == "alert bath") {
