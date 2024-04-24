@@ -2,7 +2,9 @@
   "type": "module",
   "dependencies": {
     "express": "^4.18.2",
+    "memcached": "^2.2.2",
     "moment": "^2.29.4",
+    "random": "^4.1.0",
     "ws": "^8.15.1",
     "ws-rate-limit": "^0.0.0"
   }

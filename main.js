@@ -9,6 +9,7 @@ import util from './utils.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import properties from './securedPropertiesMock.js';
+import validator from './securityUtils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -103,12 +104,15 @@ wss.on('connection', function connection(ws, req) {
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
 
-    ws.on('message', function incoming(msg) {
-        util.logInfo("incomming raw msg: " + msg)
-        if (msg == "alert bath") {
-            severity = 1;
+    ws.on('message', function incoming(payload) {
+        util.logInfo("incomming raw msg: " + payload)
+        if (validator.protocolCheck(payload)) {
+            if (validator.protocolExtract(payload).message == "alert bath") {
+                severity = 1;
+            }
         }
-        ws.send("received")
+
+        //ws.send("received")
         /* if (validator.protocolCheck(msg)){
             let message = validator.comProtExtract(msg).data
             gralUtils.logInfo("incomming ws msg: " + message)
@@ -199,7 +203,7 @@ app.use((req, res, next) => {
 app.post('/exec', async (req, res, next) => {
 
     let message = "All good!"
-    if (!wsConns.get("raspberry")){
+    if (!wsConns.get("raspberry")) {
         severity = 1
         message = "raspberry not connected!"
     }

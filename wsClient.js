@@ -1,4 +1,5 @@
 import properties from './securedProperties.js';
+import validator from './securityUtils.js';
 import WebSocket from 'ws';
 import { readFileSync } from 'fs';
 import utils from './utils.js';
@@ -125,15 +126,16 @@ function sleep(ms) {
 
 wsClient.start(serverIp, "")
 
-setInterval(function () {
+/* setInterval(function () {
   wsClient.send("to the server");
-}, 60000 * 60 * 4);
+}, 60000 * 60 * 4); */
 
 //http server
 app.use(json());
 app.post('/alert', (req, res) => {
-  wsClient.send(req.body.message);
-  res.json({});
+  let payload = validator.getPayloadStructure(req.body.message, validator.webSocketComType.inst)
+  wsClient.send(payload.prepareToSend());
+  res.json({status:'sent'});
 });
 
 const PORT = process.env.PORT || 8181;
