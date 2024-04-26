@@ -1,8 +1,9 @@
 import properties from './securedProperties.js';
 import validator from './securityUtils.js';
+import ResponseObserver from './responseObserver.js';
 import WebSocket from 'ws';
 import { readFileSync } from 'fs';
-import utils from './utils.js';
+import utils from './commonUtils.js';
 import express, { json } from 'express';
 const app = express();
 import { fileURLToPath } from 'url';
@@ -132,10 +133,11 @@ wsClient.start(serverIp, "")
 
 //http server
 app.use(json());
-app.post('/alert', (req, res) => {
-  let payload = validator.getPayloadStructure(req.body.message, validator.webSocketComType.inst)
+app.post('/alert', async (req, res) => {
+  let payload = validator.getPayloadStructure(req.body.message, validator.WSType.INST)
   wsClient.send(payload.prepareToSend());
-  res.json({status:'sent'});
+  let response = await ResponseObserver.listenResponseOrFail(payload.getId(), 2000, "Centurion not responding!")
+  res.json({ status: response });
 });
 
 const PORT = process.env.PORT || 8181;

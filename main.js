@@ -5,7 +5,7 @@ import express, { json } from 'express';
 const app = express();
 import rateLimit from 'ws-rate-limit';
 var limiter = rateLimit('10s', 20)
-import util from './utils.js';
+import util from './commonUtils.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import validator from './securityUtils.js';
@@ -105,12 +105,16 @@ wss.on('connection', function connection(ws, req) {
         payload = payload.toString()
         util.logInfo("incomming raw msg: " + payload)
         if (validator.protocolCheck(String(payload))) {
-            if (validator.protocolExtract(payload).message == "alert bath") {
+            let payload = validator.protocolExtract(payload)
+            if (payload.message == "alert bath") {
                 severity = 1;
+                let response = validator
+                    .getPayloadStructure("alert received!", validator.WSType.RESP, payload.taskId)
+                ws.send(response.prepareToSend())
             }
         }
 
-        //ws.send("received")
+
         /* if (validator.protocolCheck(msg)){
             let message = validator.comProtExtract(msg).data
             gralUtils.logInfo("incomming ws msg: " + message)

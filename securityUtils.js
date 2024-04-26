@@ -1,7 +1,7 @@
 import moment from 'moment';
 import random from 'random';
 import secProps from './securedProperties.js';
-import gralUtils from './utils.js';
+import gralUtils from './commonUtils.js';
 import Memcached from 'memcached';
 const memcached = new Memcached('localhost:11211', { timeout: 3000, retries: 2 })
 
@@ -153,27 +153,35 @@ class validator {
         return diff >= 0 && diff <= 20
     }
 
-    static webSocketComType = {
-        inst : 'INSTRUCTION',
-        resp : 'RESPONSE'
+    /**
+    * Type of websocket message: 
+    * INSTRUCTION -> send an instruction
+    * RESPONSE -> receive a response 
+    */
+    static WSType = {
+        INST: 'INSTRUCTION',
+        RESP: 'RESPONSE'
     }
 
-    static getPayloadStructure(message, type, parameters) {
+    static getPayloadStructure(message, type, taskId, parameters) {
         class communicationProtocol {
             #message
             #type
             #parameters
             #scrumbleMethod
-            constructor(message, type, parameters, scrumbleMethod) {
+            #taskId
+            constructor(message, type, taskId, parameters, scrumbleMethod) {
                 this.#message = message
                 this.#type = type
                 this.#parameters = parameters
                 this.#scrumbleMethod = scrumbleMethod
+                this.#taskId = taskId
             }
             prepareToSend() {
                 let tk = validator.generateToken()
                 let payload = {
                     token: tk,
+                    taskId: this.#taskId ?? tk,
                     type: this.#type,
                     message: this.#message,
                     parameters: this.#parameters ?? {},//{ 'vc-vib': 2 },
@@ -182,21 +190,20 @@ class validator {
                 console.log(JSON.stringify(payload))
                 return this.#scrumbleMethod(JSON.stringify(payload))
             }
+            getId(){
+                return this.#taskId
+            }
         }
-        return new communicationProtocol(message, type, parameters, this.#scrumblePayload)
+        return new communicationProtocol(message, type, taskId, parameters, this.#scrumblePayload)
     }
 
     static protocolExtract(incommingMessage) {
         incommingMessage = this.#unScrumblePayload(incommingMessage)
-        class Payload{
+        class Payload {
             message
             type
             parameters
-            constructor(message, type, parameters){
-                this.message = message
-                this.type = type
-                this.parameters = parameters
-            }
+            taskId
         }
         let paylod = new Payload()
         Object.assign(paylod, JSON.parse(incommingMessage))

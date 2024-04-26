@@ -1,7 +1,7 @@
 import properties from './securedProperties.js';
 import WebSocket from 'ws';
 import { readFileSync } from 'fs';
-import utils from './utils.js';
+import utils from './commonUtils.js';
 import express, { json } from 'express';
 const app = express();
 import { fileURLToPath } from 'url';
