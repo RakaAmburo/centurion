@@ -179,9 +179,10 @@ class validator {
             }
             prepareToSend() {
                 let tk = validator.generateToken()
+                this.#taskId = this.#taskId ?? tk
                 let payload = {
                     token: tk,
-                    taskId: this.#taskId ?? tk,
+                    taskId: this.#taskId,
                     type: this.#type,
                     message: this.#message,
                     parameters: this.#parameters ?? {},//{ 'vc-vib': 2 },
