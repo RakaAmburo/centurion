@@ -212,6 +212,7 @@ class validator {
 
     static async protocolCheck(incommingMessage) {
         try {
+            console.log("passa")
             incommingMessage = this.#unScrumblePayload(incommingMessage)
             let parsed = JSON.parse(incommingMessage);
             if (await validator.tokenIsNotValid(parsed.token)) {
