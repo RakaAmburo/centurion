@@ -85,7 +85,9 @@ wsClient.start = (ip, st) => {
     if (await validator.protocolCheck(message)){
       
         let extracted = validator.protocolExtract(message)
-        utils.logInfo(extracted)
+        utils.logInfo(extracted.message)
+        utils.logInfo(extracted.taskId)
+        utils.logInfo(extracted.type)
         if (extracted.type == validator.WSType.RESP){
           
            responseObserver.notifyResponse(extracted.taskId, extracted.message)
