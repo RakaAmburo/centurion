@@ -105,12 +105,12 @@ wss.on('connection', function connection(ws, req) {
         payload = payload.toString()
         util.logInfo("incomming raw message: " + payload)
         if (await validator.protocolCheck(payload)) {
-            let payload = validator.protocolExtract(payload)
+            let extracted = validator.protocolExtract(payload)
             console.log("paso " + payload)
-            if (payload.message == "alert bath") {
+            if (extracted.message == "alert bath") {
                 severity = 1;
                 let response = validator
-                    .getPayloadStructure("alert received!", validator.WSType.RESP, payload.taskId)
+                    .getPayloadStructure("alert received!", validator.WSType.RESP, extracted.taskId)
                 ws.send(response.prepareToSend())
             }
         }
