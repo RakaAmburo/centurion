@@ -101,10 +101,10 @@ wss.on('connection', function connection(ws, req) {
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
 
-    ws.on('message', function incoming(payload) {
+    ws.on('message', async function incoming(payload) {
         payload = payload.toString()
         util.logInfo("incomming raw msg: " + payload)
-        if (validator.protocolCheck(String(payload))) {
+        if (await validator.protocolCheck(payload)) {
             let payload = validator.protocolExtract(payload)
             if (payload.message == "alert bath") {
                 severity = 1;
