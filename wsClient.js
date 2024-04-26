@@ -85,6 +85,7 @@ wsClient.start = (ip, st) => {
     if (await validator.protocolCheck(message)){
         let extracted = validator.protocolExtract(payload)
         if (extracted.type == validator.WSType.RESP){
+          utils.logInfo("llega hasta aqui")
            responseObserver.notifyResponse(extracted.taskId, extracted.message)
         }
     } else {
