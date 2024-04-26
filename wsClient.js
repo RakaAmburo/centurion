@@ -83,8 +83,9 @@ wsClient.start = (ip, st) => {
     utils.logInfo("incomming raw msg: " + message);
     message = message.toString()
     if (await validator.protocolCheck(message)){
-      utils.logInfo("llega hasta aqui")
-        let extracted = validator.protocolExtract(payload)
+      
+        let extracted = validator.protocolExtract(message)
+        utils.logInfo("llega hasta aqui")
         if (extracted.type == validator.WSType.RESP){
           
            responseObserver.notifyResponse(extracted.taskId, extracted.message)
