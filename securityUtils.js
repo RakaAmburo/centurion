@@ -212,14 +212,13 @@ class validator {
 
     static async protocolCheck(incommingMessage) {
         try {
-            console.log("passa")
             incommingMessage = this.#unScrumblePayload(incommingMessage)
             let parsed = JSON.parse(incommingMessage);
             if (await validator.tokenIsNotValid(parsed.token)) {
                 gralUtils.logInfo('Token not valid!!')
                 throw new Error('Token not valid!')
             }
-            return parsed.hasOwnProperty('data') && parsed.hasOwnProperty('just2annoy')
+            return parsed.hasOwnProperty('message') && parsed.hasOwnProperty('just2annoy')
         } catch (e) {
             gralUtils.logInfo(e)
             gralUtils.logInfo(incommingMessage)
