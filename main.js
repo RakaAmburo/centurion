@@ -103,9 +103,8 @@ wss.on('connection', function connection(ws, req) {
 
     ws.on('message', async function incoming(payload) {
         payload = payload.toString()
-        util.logInfo("incomming raw msg: " + payload)
+        util.logInfo("incomming raw message: " + payload)
         if (await validator.protocolCheck(payload)) {
-            util.logInfo("vaid")
             let payload = validator.protocolExtract(payload)
             if (payload.message == "alert bath") {
                 severity = 1;
