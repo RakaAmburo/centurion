@@ -218,6 +218,7 @@ class validator {
                 gralUtils.logInfo('Token not valid!!')
                 throw new Error('Token not valid!')
             }
+            console.log(parsed)
             return parsed.hasOwnProperty('message') && parsed.hasOwnProperty('just2annoy')
         } catch (e) {
             gralUtils.logInfo(e)
