@@ -188,7 +188,7 @@ class validator {
                     parameters: this.#parameters ?? {},//{ 'vc-vib': 2 },
                     just2annoy: ';)'
                 }
-                console.log(JSON.stringify(payload))
+                //console.log(JSON.stringify(payload))
                 return this.#scrumbleMethod(JSON.stringify(payload))
             }
             getId(){

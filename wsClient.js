@@ -86,9 +86,6 @@ wsClient.start = (ip, st) => {
 
       let extracted = validator.protocolExtract(message)
       if (extracted.type == validator.WSType.RESP) {
-        utils.logInfo(extracted.message)
-        utils.logInfo(extracted.taskId)
-        utils.logInfo(extracted.type)
         responseObserver.notifyResponse(extracted.taskId, extracted.message)
       }
     } else {
@@ -149,7 +146,8 @@ app.use(json());
 app.post('/alert', async (req, res) => {
   let payload = validator.getPayloadStructure(req.body.message, validator.WSType.INST)
   wsClient.send(payload.prepareToSend());
-  let response = await responseObserver.listenResponseOrFail(payload.getId(), 2000, "Centurion not responding!")
+  let response = await responseObserver
+    .listenResponseOrFail(payload.getId(), 2000, "Centurion not responding!")
   res.json({ status: response });
 });
 
