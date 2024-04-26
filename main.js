@@ -5,7 +5,7 @@ import express, { json } from 'express';
 const app = express();
 import rateLimit from 'ws-rate-limit';
 var limiter = rateLimit('10s', 20)
-import util from './commonUtils.js';
+import utils from './commonUtils.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import validator from './securityUtils.js';
@@ -32,7 +32,7 @@ const wsConns = new Map();
 function noop() { }
 
 function heartbeat() {
-    util.logInfo("heartbeat server")
+    utils.logInfo("heartbeat server")
     this.isAlive = true;
 }
 
@@ -97,16 +97,15 @@ wss.on('connection', function connection(ws, req) {
     ws.on('pong', heartbeat);
 
     let clientId = req.headers['client-id']
-    util.logInfo("ws connected " + clientId)
+    utils.logInfo("ws connected " + clientId)
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
 
     ws.on('message', async function incoming(payload) {
         payload = payload.toString()
-        util.logInfo("incomming raw message: " + payload)
+        utils.logInfo("incomming raw message: " + payload)
         if (await validator.protocolCheck(payload)) {
             let extracted = validator.protocolExtract(payload)
-            console.log("paso " + payload)
             if (extracted.message == "alert bath") {
                 severity = 1;
                 let response = validator
@@ -140,18 +139,18 @@ wss.on('connection', function connection(ws, req) {
     });
 
     ws.on('limited', msg => {
-        util.logInfo('Rate limit activated!')
-        util.logInfo(JSON.stringify(req.headers))
+        utils.logInfo('Rate limit activated!')
+        utils.logInfo(JSON.stringify(req.headers))
         ws.send('I got your information.');
     })
 
     ws.on('close', function close() {
-        util.logInfo(clientId + ' ws closed')
+        utils.logInfo(clientId + ' ws closed')
         wsConns.delete(clientId)
     });
 
     ws.on('error', function (err) {
-        util.logError('ws error: ' + err);
+        utils.logError('ws error: ' + err);
     });
 });
 
@@ -234,7 +233,7 @@ server.listen(8888, function () {
     let host = server.address().address
     let port = server.address().port
 
-    util.logInfo(`Started voice command app, listening at port ${port}`)
+    utils.logInfo(`Started voice command app, listening at port ${port}`)
 
 })
 

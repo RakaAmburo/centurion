@@ -1,6 +1,6 @@
 import properties from './securedProperties.js';
 import validator from './securityUtils.js';
-import ResponseObserver from './responseObserver.js';
+import responseObserver from './responseObserver.js';
 import WebSocket from 'ws';
 import { readFileSync } from 'fs';
 import utils from './commonUtils.js';
@@ -79,8 +79,17 @@ wsClient.start = (ip, st) => {
     utils.logError("Socket client error: " + error.message)
   });
 
-  wss.on('message', function incoming(message) {
+  wss.on('message', async function incoming(message) {
     utils.logInfo("incomming raw msg: " + message);
+    message = message.toString()
+    if (await validator.protocolCheck(message)){
+        let extracted = validator.protocolExtract(payload)
+        if (extracted.type == validator.WSType.RESP){
+           responseObserver.notifyResponse(extracted.taskId, extracted.message)
+        }
+    } else {
+      utils.logError("protocol fail!")
+    }
     /* if (!validator.protocolCheck(message)) {
      gralUtils.logInfo('Wrong communication protocols structure!')
    } else {
@@ -136,7 +145,7 @@ app.use(json());
 app.post('/alert', async (req, res) => {
   let payload = validator.getPayloadStructure(req.body.message, validator.WSType.INST)
   wsClient.send(payload.prepareToSend());
-  let response = await ResponseObserver.listenResponseOrFail(payload.getId(), 2000, "Centurion not responding!")
+  let response = await responseObserver.listenResponseOrFail(payload.getId(), 2000, "Centurion not responding!")
   res.json({ status: response });
 });
 

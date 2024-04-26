@@ -1,4 +1,4 @@
-class ResponseObserver {
+class responseObserver {
     static #observers = new Map()
     static async listenResponseOrFail(id, timeOut, errMessage) {
         let observer = this.#getResponseObserver(timeOut, errMessage)
@@ -37,4 +37,4 @@ class ResponseObserver {
     }
 }
 
-export default ResponseObserver
+export default responseObserver
