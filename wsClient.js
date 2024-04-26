@@ -82,16 +82,15 @@ wsClient.start = (ip, st) => {
   wss.on('message', async function incoming(message) {
     utils.logInfo("incomming raw msg: " + message);
     message = message.toString()
-    if (await validator.protocolCheck(message)){
-      
-        let extracted = validator.protocolExtract(message)
+    if (await validator.protocolCheck(message)) {
+
+      let extracted = validator.protocolExtract(message)
+      if (extracted.type == validator.WSType.RESP) {
         utils.logInfo(extracted.message)
         utils.logInfo(extracted.taskId)
         utils.logInfo(extracted.type)
-        if (extracted.type == validator.WSType.RESP){
-          
-           responseObserver.notifyResponse(extracted.taskId, extracted.message)
-        }
+        responseObserver.notifyResponse(extracted.taskId, extracted.message)
+      }
     } else {
       utils.logError("protocol fail!")
     }
