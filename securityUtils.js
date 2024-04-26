@@ -3,7 +3,7 @@ import random from 'random';
 import secProps from './securedProperties.js';
 import gralUtils from './commonUtils.js';
 import Memcached from 'memcached';
-const memcached = new Memcached('localhost:11211', { timeout: 3000, retries: 2 })
+const memcached = new Memcached('127.0.0.1:11211', { timeout: 3000, retries: 2 })
 
 class validator {
 
