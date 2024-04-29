@@ -32,10 +32,10 @@ const wsConns = new Map();
 function noop() { }
 
 class heartbeat {
-    getMechanism = (clientId) => {
+    getMechanism = (clientId, ws) => {
         return () => {
             utils.logInfo("pong from " + clientId);
-            this.isAlive = true;
+            ws.isAlive = true;
         }
     }
 }
@@ -93,13 +93,11 @@ const respObserver = (timeout, errMessage) => {
 }
 
 wss.on('connection', function connection(ws, req) {
-
     // limit requests -> 2 per second
     limiter(ws)
-
     ws.isAlive = true;
     let clientId = req.headers['client-id']
-    ws.on('pong', (new heartbeat).getMechanism(clientId));
+    ws.on('pong', (new heartbeat).getMechanism(clientId, ws));
     utils.logInfo("ws connected " + clientId)
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
