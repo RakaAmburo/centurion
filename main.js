@@ -36,9 +36,11 @@ class heartbeat {
     constructor(clientId) {
         this.#clientId = clientId
     }
-    getMechanism = () =>{
-        utils.logInfo("pong from " + this.#clientId);
-        this.isAlive = true;
+    getMechanism = () => {
+        return () => {
+            utils.logInfo("pong from " + this.#clientId);
+            this.isAlive = true;
+        }
     }
 }
 
@@ -46,7 +48,7 @@ const wss = new WebSocketServer({
     noServer: true,
     maxPayload: 450,
     verifyClient: async (info, callback) => {
-         try {
+        try {
             let clientId = info.req.headers['client-id']
             let token = info.req.headers.authorization
             if (wsConns.get(clientId)) {
@@ -62,7 +64,7 @@ const wss = new WebSocketServer({
         } catch (error) {
             utils.logInfo(error)
             callback(false, 404, 'Not Found');
-        } 
+        }
         callback(true);
     }
 
