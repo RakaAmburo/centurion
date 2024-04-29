@@ -31,9 +31,15 @@ const wsConns = new Map();
 //checker.setWsConns(wsConns)
 function noop() { }
 
-function heartbeat() {
-    utils.logInfo("heartbeat server")
-    this.isAlive = true;
+class heartbeat {
+    #clientId
+    constructor(clientId) {
+        this.#clientId = clientId
+    }
+    getMechanism = () =>{
+        utils.logInfo("pong from " + this.#clientId);
+        this.isAlive = true;
+    }
 }
 
 const wss = new WebSocketServer({
@@ -94,9 +100,8 @@ wss.on('connection', function connection(ws, req) {
     limiter(ws)
 
     ws.isAlive = true;
-    ws.on('pong', heartbeat);
-
     let clientId = req.headers['client-id']
+    ws.on('pong', heartbeat(clientId).getMechanism);
     utils.logInfo("ws connected " + clientId)
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
