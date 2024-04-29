@@ -5,7 +5,8 @@ const execAsync = promisify(exec);
 import moment from 'moment';
 import { networkInterfaces } from 'os';
 const nets = networkInterfaces();
-
+import simpleGit from 'simple-git'
+const git = simpleGit(process.cwd());
 
 const dateFormat = 'D-MM-YY|HH:mm:ss';
 const utils = []
@@ -61,6 +62,19 @@ utils.retartApp = (seconds) => {
         process.exit(0);
     }, seconds * 1000);
     return `restarting in ${seconds} secs!`
+}
+
+utils.pullFromGitAndRestart = () => {
+    git.pull((err, update) => {
+        if (err) {
+            utils.logError('Cant pull from git ' + err)
+        } else if (update && update.summary.changes) {
+            utils.logInfo('Git pull changes found!')
+            utils.logInfo(utils.retartApp(10))
+        } else {
+            utils.logInfo('Git with no changes, keep as if.')
+        }
+    })
 }
 
 export default utils

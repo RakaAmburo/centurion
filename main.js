@@ -110,6 +110,8 @@ wss.on('connection', function connection(ws, req) {
                 let response = validator
                     .getPayloadStructure("alert received!", validator.WSType.RESP, extracted.taskId)
                 ws.send(response.prepareToSend())
+            } else if (extracted.message == "PULL_RESTART"){
+                utils.pullFromGitAndRestart
             }
         }
 

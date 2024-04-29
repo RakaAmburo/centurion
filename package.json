@@ -5,6 +5,7 @@
     "memcached": "^2.2.2",
     "moment": "^2.29.4",
     "random": "^4.1.0",
+    "simple-git": "^3.24.0",
     "ws": "^8.15.1",
     "ws-rate-limit": "^0.0.0"
   }
