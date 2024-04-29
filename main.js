@@ -101,7 +101,8 @@ wss.on('connection', function connection(ws, req) {
 
     ws.isAlive = true;
     let clientId = req.headers['client-id']
-    ws.on('pong', heartbeat(clientId).getMechanism);
+    let hb = new heartbeat(clientId)
+    ws.on('pong', hb.getMechanism());
     utils.logInfo("ws connected " + clientId)
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
