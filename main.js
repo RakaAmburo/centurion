@@ -40,23 +40,23 @@ const wss = new WebSocketServer({
     noServer: true,
     maxPayload: 450,
     verifyClient: async (info, callback) => {
-        /* try {
+         try {
             let clientId = info.req.headers['client-id']
             let token = info.req.headers.authorization
             if (wsConns.get(clientId)) {
-                gralUtils.logInfo(`${clientId} allready connected, so rejecting!`)
+                utils.logInfo(`${clientId} allready connected, so rejecting!`)
                 callback(false, 401, 'Unauthorized');
             }
-            if (await validator.isNotValid(token)) {
-                gralUtils.logInfo(`token (${token}) not authorized from ${clientId}`)
+            if (await validator.tokenIsNotValidWithBearer(token)) {
+                utils.logInfo(`token (${token}) not authorized from ${clientId}`)
                 callback(false, 401, 'Unauthorized');
             } else {
                 callback(true);
             }
         } catch (error) {
-            gralUtils.logInfo(error)
+            utils.logInfo(error)
             callback(false, 404, 'Not Found');
-        } */
+        } 
         callback(true);
     }
 
