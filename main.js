@@ -32,13 +32,9 @@ const wsConns = new Map();
 function noop() { }
 
 class heartbeat {
-    #clientId
-    constructor(clientId) {
-        this.#clientId = clientId
-    }
-    getMechanism = () => {
+    getMechanism = (clientId) => {
         return () => {
-            utils.logInfo("pong from " + this.#clientId);
+            utils.logInfo("pong from " + clientId);
             this.isAlive = true;
         }
     }
@@ -103,8 +99,7 @@ wss.on('connection', function connection(ws, req) {
 
     ws.isAlive = true;
     let clientId = req.headers['client-id']
-    let hb = new heartbeat(clientId)
-    ws.on('pong', hb.getMechanism());
+    ws.on('pong', (new heartbeat).getMechanism(clientId));
     utils.logInfo("ws connected " + clientId)
     let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, { ws, obs })
