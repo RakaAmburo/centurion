@@ -69,7 +69,7 @@ utils.pullFromGitAndRestart = () => {
         if (err) {
             utils.logError('Cant pull from git ' + err)
         } else if (update && update.summary.changes) {
-            utils.logInfo('Git pull changes found!!')
+            utils.logInfo('Git pull changes found!!!')
             utils.logInfo(utils.retartApp(10))
         } else {
             utils.logInfo('Git with no changes, keep as if.')
