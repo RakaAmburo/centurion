@@ -48,10 +48,9 @@ wsClient.start = (ip, st) => {
     cert: certificate,
     headers: {
       "authorization": validator.generateTokenWithBearer(),
-      "client-id": process.env.WEBSOCKET_CLIENT_ID
+      "client-id": "raspberry"//process.env.WEBSOCKET_CLIENT_ID
     }
   });
-  console.log("+++++++++++++++++environment "+ process.env.WEBSOCKET_CLIENT_ID)
   wss.on('open', function () {
     /* failedConnectionsTries = 0
     clearTimeout(this.pingTimeout);
