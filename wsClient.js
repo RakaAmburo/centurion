@@ -46,7 +46,10 @@ wsClient.start = (ip, st) => {
     rejectUnauthorized: false,
     key: privateKey,
     cert: certificate,
-    headers: { "authorization": validator.generateTokenWithBearer(), "client-id": 'raspberry' }
+    headers: {
+      "authorization": validator.generateTokenWithBearer(),
+      "client-id": process.env.WEBSOCKET_CLIENT_ID
+    }
   });
 
   wss.on('open', function () {
@@ -78,7 +81,6 @@ wsClient.start = (ip, st) => {
   });
 
   wss.on('error', function (error) {
-
     utils.logError("Socket client error: " + error.message)
   });
 
@@ -109,7 +111,6 @@ wsClient.start = (ip, st) => {
      let comProt = validator.getComProt(); 
      gralUtils.logInfo("Exec action: " + action);
    } */
-
   });
 
 }
@@ -139,10 +140,6 @@ function sleep(ms) {
 }
 
 wsClient.start(serverIp, "")
-
-/* setInterval(function () {
-  wsClient.send("to the server");
-}, 60000 * 60 * 4); */
 
 //http server
 app.use(json());
