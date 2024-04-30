@@ -51,7 +51,7 @@ wsClient.start = (ip, st) => {
       "client-id": process.env.WEBSOCKET_CLIENT_ID
     }
   });
-
+  console.log("+++++++++++++++++environment "+ process.env.WEBSOCKET_CLIENT_ID)
   wss.on('open', function () {
     /* failedConnectionsTries = 0
     clearTimeout(this.pingTimeout);
