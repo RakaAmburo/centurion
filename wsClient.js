@@ -19,13 +19,16 @@ const wsClient = []
 var stopping = false;
 var failedConnectionsTries = 0
 
-function noop() { }
-function heartbeat() {
-  utils.logInfo(`heartbeat client`);
-  clearTimeout(this.pingTimeout);
-  this.pingTimeout = setTimeout(() => {
-    this.terminate();
-  }, (60000 * 4) + 10000);
+class heartbeat {
+  getMechanism = (wss) => {
+    return () => {
+      utils.logInfo(`Server pinged`);
+      clearTimeout(wss.pingTimeout);
+      wss.pingTimeout = setTimeout(() => {
+        wss.terminate();
+      }, (60000 * 4) + 10000);
+    }
+  }
 }
 
 var currentConnStatus
@@ -56,7 +59,7 @@ wsClient.start = (ip, st) => {
     utils.logInfo('socket client open');
   });
 
-  wss.on('ping', heartbeat);
+  wss.on('ping', (new heartbeat()).getMechanism(wss));
 
   wss.on('close', async function () {
     utils.logInfo(`ws connection to  closed`);
