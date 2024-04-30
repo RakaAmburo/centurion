@@ -48,7 +48,7 @@ wsClient.start = (ip, st) => {
     cert: certificate,
     headers: {
       "authorization": validator.generateTokenWithBearer(),
-      "client-id": "raspberry"//process.env.WEBSOCKET_CLIENT_ID
+      "client-id": process.env.WEBSOCKET_CLIENT_ID
     }
   });
   wss.on('open', function () {
