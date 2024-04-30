@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const clientId = process.env.WEBSOCKET_CLIENT_ID
 
 var privateKey = readFileSync(__dirname + '/certs/SAN/client-key.pem', 'utf8');
 var certificate = readFileSync(__dirname + '/certs/SAN/client-crt.pem', 'utf8');
@@ -48,7 +49,7 @@ wsClient.start = (ip, st) => {
     cert: certificate,
     headers: {
       "authorization": validator.generateTokenWithBearer(),
-      "client-id": process.env.WEBSOCKET_CLIENT_ID
+      "client-id": clientId
     }
   });
   wss.on('open', function () {
@@ -143,11 +144,16 @@ wsClient.start(serverIp, "")
 //http server
 app.use(json());
 app.post('/alert', async (req, res) => {
-  let payload = validator.getPayloadStructure(req.body.message, validator.WSType.INST)
-  wsClient.send(payload.prepareToSend());
-  let response = await responseObserver
-    .listenResponseOrFail(payload.getId(), 2000, "Centurion not responding!")
-  res.json({ status: response });
+  if (req.body.dest == clientId) {
+    utils.pullFromGitAndRestart()
+    res.json({ status: 'processing!' });
+  } else {
+    let payload = validator.getPayloadStructure(req.body.message, validator.WSType.INST)
+    wsClient.send(payload.prepareToSend());
+    let response = await responseObserver
+      .listenResponseOrFail(payload.getId(), 2000, "Centurion not responding!")
+    res.json({ status: response });
+  }
 });
 
 const PORT = process.env.PORT || 8181;
