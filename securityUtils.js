@@ -146,7 +146,6 @@ class validator {
         sentTimestamp = moment.unix(sentTimestamp)
         let actualTimeStump = moment()
         let diff = actualTimeStump.diff(sentTimestamp, 'seconds')
-        console.log(diff)
         return diff >= 0 && diff <= 20
     }
 
