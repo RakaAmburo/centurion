@@ -117,7 +117,7 @@ class validator {
         //console.log(moment().unix())
         let card = secProps.strategy[cardId]
         let modifier = new Number(card.join(''))
-        let parcial = new Number(timestumpLastPart) + modifier
+        let parcial = new Number('1' + timestumpLastPart) + modifier
         let cardIdStr = cardId.toString()
         let pre, post
         if (cardIdStr.length == 1) {
@@ -145,8 +145,9 @@ class validator {
         let card = secProps.strategy[cardId]
         let modifier = new Number(card?.join(''))
         let timestampLastPart = core - modifier
+        timestampLastPart = timestampLastPart.toString().slice(1)
         let timestampFirstPart = moment().unix().toString().slice(0, -6)
-        let sentTimestamp = timestampFirstPart + timestampLastPart.toString()
+        let sentTimestamp = timestampFirstPart + timestampLastPart
         sentTimestamp = moment.unix(sentTimestamp)
         let actualTimeStump = moment()
         let diff = actualTimeStump.diff(sentTimestamp, 'seconds')
