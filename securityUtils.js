@@ -94,10 +94,6 @@ class validator {
             return secProps.scrambleddNumbers.indexOf(new Number(char))
         });
         token = Buffer.from(token, 'base64').toString('utf-8');
-        let chars = token.split('')
-        let TokenPre = chars[0]
-        let TokenPost = chars.slice(-1)
-        let cardId = new Number((TokenPre === "H") ? TokenPost : TokenPre + TokenPost)
         let tokeIsValid = this.#rawTokenIsValid(token)
         if (tokeIsValid) {
             await this.#storeToken(original)
@@ -114,7 +110,6 @@ class validator {
 
     static #generateRawToken(cardId) {
         let timestumpLastPart = moment().unix().toString().slice(-6)
-        //console.log(moment().unix())
         let card = secProps.strategy[cardId]
         let modifier = new Number(card.join(''))
         let parcial = new Number('1' + timestumpLastPart) + modifier
@@ -151,6 +146,7 @@ class validator {
         sentTimestamp = moment.unix(sentTimestamp)
         let actualTimeStump = moment()
         let diff = actualTimeStump.diff(sentTimestamp, 'seconds')
+        console.log(diff)
         return diff >= 0 && diff <= 20
     }
 

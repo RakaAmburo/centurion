@@ -177,15 +177,14 @@ app.use(json());
 
 /* validates each request with a token */
 var validate = async (req, res, next) => {
-    //gralUtils.logInfo("endpint auth token: " + req.headers['authorization'])
+    //utils.logInfo("endpint auth token: " + req.headers['authorization'])
     try {
-        //if (await validator.isNotValid(req.headers['authorization'])) {
         if (await validator.tokenIsNotValidWithBearer(req.headers['authorization'])) {
             utils.logInfo("token not authorized: " + req.headers['authorization'])
             return res.sendStatus(401)
         }
     } catch (error) {
-        //gralUtils.logError(error)
+        utils.logError(error)
         return res.sendStatus(404)
     }
     next();
