@@ -180,8 +180,8 @@ var validate = async (req, res, next) => {
     //gralUtils.logInfo("endpint auth token: " + req.headers['authorization'])
     try {
         //if (await validator.isNotValid(req.headers['authorization'])) {
-        if (false) {
-            //gralUtils.logInfo("token not authorized: " + req.headers['authorization'])
+        if (validator.tokenIsNotValidWithBearer(req.headers['authorization'])) {
+            utils.logInfo("token not authorized: " + req.headers['authorization'])
             return res.sendStatus(401)
         }
     } catch (error) {
