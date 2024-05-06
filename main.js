@@ -146,7 +146,7 @@ wss.on('connection', function connection(ws, req) {
     ws.on('limited', msg => {
         utils.logInfo('Rate limit activated!')
         utils.logInfo(JSON.stringify(req.headers))
-        ws.send('I got your information.');
+        ws.send('I got your information!');
     })
 
     ws.on('close', function close() {
