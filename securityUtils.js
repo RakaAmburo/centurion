@@ -50,31 +50,31 @@ class validator {
         return `Bearer ${scrambledBaseToken}`
     }
 
-    static async #storeToken(token) {
+    static async #store(key, seconds) {
         return new Promise(function (resolve, reject) {
-            memcached.add(token, 'exist', 80, function (err) {
+            memcached.add(key, 'exist', seconds, function (err) {
                 if (err) {
-                    console.log(err)
+                    gralUtils.logError(err)
                     reject("Problem connecting (add) with memchaced")
                 } else {
-                    resolve()
+                    resolve(true)
                 }
             });
         })
     }
 
-    static async #isRepeated(token) {
+    static async #isStored(key) {
         return new Promise(function (resolve, reject) {
-            memcached.get(token, function (err, data) {
+            memcached.get(key, function (err, data) {
                 //console.log("checking this token " + token)
                 if (err) {
-                    console.log(err)
+                    gralUtils.logError(err)
                     reject("Problem connecting (get) with memchaced")
                 }
                 else if (data) {
-                    reject("token repeated found in cache: " + token)
+                    resolve(true)
                 } else {
-                    resolve()
+                    resolve(false)
                 }
             });
         })
@@ -85,7 +85,10 @@ class validator {
             return true
         }
         let original = token
-        await this.#isRepeated(token)
+        if (await this.#isStored(token)){
+            gralUtils.logInfo("Token repited " + token)
+            return true
+        }
         let reSorting = token.replace(/([a-zA-Z]{1})/g, (char) => {
             let fakePos = secProps.scrambledLetters.indexOf(char)
             return secProps.letters.charAt(fakePos)
@@ -96,7 +99,7 @@ class validator {
         token = Buffer.from(token, 'base64').toString('utf-8');
         let tokeIsValid = this.#rawTokenIsValid(token)
         if (tokeIsValid) {
-            await this.#storeToken(original)
+            await this.#store(original, 80)
         }
         //console.log("just generated => " + validToken)
         //console.log("camming from app => " + token)
@@ -109,10 +112,10 @@ class validator {
     }
 
     static #generateRawToken(cardId) {
-        let timestumpLastPart = moment().unix().toString().slice(-6)
+        let timestampLastPart = moment().unix().toString().slice(-6)
         let card = secProps.strategy[cardId]
         let modifier = new Number(card.join(''))
-        let parcial = new Number('1' + timestumpLastPart) + modifier
+        let parcial = new Number('1' + timestampLastPart) + modifier
         let cardIdStr = cardId.toString()
         let pre, post
         if (cardIdStr.length == 1) {
@@ -144,8 +147,8 @@ class validator {
         let timestampFirstPart = moment().unix().toString().slice(0, -6)
         let sentTimestamp = timestampFirstPart + timestampLastPart
         sentTimestamp = moment.unix(sentTimestamp)
-        let actualTimeStump = moment()
-        let diff = actualTimeStump.diff(sentTimestamp, 'seconds')
+        let actualTimeStamp = moment()
+        let diff = actualTimeStamp.diff(sentTimestamp, 'seconds')
         return diff >= 0 && diff <= 20
     }
 
@@ -187,7 +190,7 @@ class validator {
                 //console.log(JSON.stringify(payload))
                 return this.#scrumbleMethod(JSON.stringify(payload))
             }
-            getId(){
+            getId() {
                 return this.#taskId
             }
         }
@@ -221,6 +224,14 @@ class validator {
             gralUtils.logInfo(incommingMessage)
             return false;
         }
+    }
+
+    static async isblackListed(ip) {
+        return await this.#isStored(ip)
+    }
+
+    static async toblackList(ip) {
+        return this.#store(ip, 86400)//One day!
     }
 }
 

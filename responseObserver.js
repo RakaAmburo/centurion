@@ -3,7 +3,7 @@ class responseObserver {
     static async listenResponseOrFail(id, timeOut, errMessage) {
         let observer = this.#getResponseObserver(timeOut, errMessage)
         this.#observers.set(id, observer)
-        console.log("storing " + id)
+        //console.log("storing " + id)
         return observer.listen()
     }
     static notifyResponse(id, message) {

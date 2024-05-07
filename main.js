@@ -179,6 +179,9 @@ app.use(json());
 var validate = async (req, res, next) => {
     //utils.logInfo("endpint auth token: " + req.headers['authorization'])
     try {
+        if (await validator.isblackListed(req.ip)){
+            return res.status(403).send('Not authorized!');
+        }
         if (await validator.tokenIsNotValidWithBearer(req.headers['authorization'])) {
             utils.logInfo("token not authorized: " + req.headers['authorization'])
             return res.sendStatus(401)
@@ -190,21 +193,6 @@ var validate = async (req, res, next) => {
     next();
 }
 app.use(validate)
-
-// Lista negra de direcciones IP bloqueadas
-const blacklistedIPs = new Set();
-// Middleware para verificar la dirección IP
-app.use((req, res, next) => {
-    const clientIP = req.ip;
-    // Verificar si la dirección IP está en la lista negra
-    if (blacklistedIPs.has(clientIP)) {
-        // Si la IP está en la lista negra, responder con un mensaje de error
-        return res.status(403).send('Tu dirección IP ha sido bloqueada temporalmente.');
-    }
-    // Si la IP no está en la lista negra, continuar con la solicitud
-    next();
-});
-
 
 app.post('/exec', async (req, res, next) => {
 
@@ -224,7 +212,7 @@ app.post('/exec', async (req, res, next) => {
 })
 
 app.use(function (req, res, next) {
-    //gralUtils.logInfo('requested Route that not exist')
+    utils.logInfo('requested Route that not exist')
     res.status(404).send({
         status: 404,
         message: 'you have nothing to do here! you will be banned',
