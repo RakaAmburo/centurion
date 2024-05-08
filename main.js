@@ -45,6 +45,7 @@ const wss = new WebSocketServer({
     maxPayload: 450,
     verifyClient: async (info, callback) => {
         try {
+            utils.logInfo("Verify Client:")
             let clientId = info.req.headers['client-id']
             let token = info.req.headers.authorization
             if (wsConns.get(clientId)) {
@@ -63,7 +64,6 @@ const wss = new WebSocketServer({
         }
         callback(true);
     }
-
 });
 server.on('upgrade', function upgrade(request, socket, head) {
     wss.handleUpgrade(request, socket, head, function done(ws) {
@@ -93,6 +93,7 @@ const respObserver = (timeout, errMessage) => {
 }
 
 wss.on('connection', function connection(ws, req) {
+    utils.logInfo("remote address: " + req.socket.remoteAddress)
     // limit requests -> 2 per second
     limiter(ws)
     ws.isAlive = true;
@@ -117,6 +118,10 @@ wss.on('connection', function connection(ws, req) {
                     .getPayloadStructure("instruction processed!", validator.WSType.RESP, extracted.taskId)
                 ws.send(response.prepareToSend())
             }
+        } else {
+            utils.logInfo("Closing web socket due to an invalid protocol!!!")
+            //blacklist
+            ws.close();
         }
 
 
