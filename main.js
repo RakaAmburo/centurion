@@ -184,6 +184,7 @@ app.use(json());
 var validate = async (req, res, next) => {
     //utils.logInfo("endpint auth token: " + req.headers['authorization'])
     try {
+        utils.logInfo("checking ip: " + req.ip)
         if (await validator.isblackListed(req.ip)){
             return res.status(403).send('Not authorized!');
         }
