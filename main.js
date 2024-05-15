@@ -102,7 +102,7 @@ wss.on('connection', function connection(ws, req) {
     ws.on('pong', (new heartbeat).getMechanism(clientId, ws));
     utils.logInfo("ws connected " + clientId)
     let obs = respObserver(4000, "web socket time out")
-    wsConns.set(clientId, { ws, obs })
+    wsConns.set(clientId, ws)
     ws.on('message', async function incoming(payload) {
         payload = payload.toString()
         utils.logInfo("incomming raw message: " + payload)
