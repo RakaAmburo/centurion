@@ -20,7 +20,6 @@ var certificate = readFileSync(__dirname + '/certs/SAN/client-crt.pem', 'utf8');
 const serverIp = properties.centurionIp
 const wsClient = []
 var stopping = false;
-var failedConnectionsTries = 0
 
 class heartbeat {
   getMechanism = (wss) => {
@@ -34,13 +33,10 @@ class heartbeat {
   }
 }
 
-var currentConnStatus
-var tryedIp
+
 var lastUsedIp
 var wss
-wsClient.start = (ip, st) => {
-  currentConnStatus = st
-  tryedIp = ip
+wsClient.start = (ip) => {
   utils.logInfo('connecting ws to ' + ip)
   let wsPort = 8888
   wss = new WebSocket(`wss://${ip}:${wsPort}`, {
@@ -54,13 +50,8 @@ wsClient.start = (ip, st) => {
       "client-id": clientId
     }
   });
+
   wss.on('open', function () {
-    /* failedConnectionsTries = 0
-    clearTimeout(this.pingTimeout);
-    this.pingTimeout = setTimeout(() => {
-      this.terminate();
-    }, 30000 + 1000);
-    lastUsedIp = tryedIp */
     utils.logInfo('socket client open');
   });
 
@@ -71,15 +62,6 @@ wsClient.start = (ip, st) => {
     clearTimeout(this.pingTimeout);
     await sleep(10000)
     wsClient.start(serverIp, "status")
-    /* clearTimeout(this.pingTimeout);
-    let useIp = (lastUsedIp) ? lastUsedIp : tryedIp
-    gralUtils.logInfo(`ws connection to ${useIp} closed`);
-    if (!stopping) {
-      await sleep(10000)
-      wsClient.start(useIp, currentConnStatus)
-    } else {
-      stopping = false;
-    } */
   });
 
   wss.on('error', function (error) {
@@ -97,21 +79,6 @@ wsClient.start = (ip, st) => {
     } else {
       utils.logError("protocol check failed!!!")
     }
-    /* if (!validator.protocolCheck(message)) {
-     gralUtils.logInfo('Wrong communication protocols structure!')
-   } else {
-     let action = validator.comProtExtract(message).data
-     if (action.startsWith('connect2home:')) {
-       let ipAndstatus = action.replace("connect2home:", "").split(':')
-       gralUtils.logInfo("Trying to desconnect ws from aws and connect home")
-       wsClient.stop()
-       setTimeout(() => {
-         wsClient.start(ipAndstatus[0], ipAndstatus[1])
-       }, 10000);
-     }
-     let comProt = validator.getComProt(); 
-     gralUtils.logInfo("Exec action: " + action);
-   } */
   });
 
 }
@@ -140,7 +107,7 @@ function sleep(ms) {
   });
 }
 
-wsClient.start(serverIp, "")
+wsClient.start(serverIp)
 
 //http server
 app.use(json());
