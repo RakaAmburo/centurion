@@ -65,6 +65,7 @@ const wss = new WebSocketServer({
         callback(true);
     }
 });
+
 server.on('upgrade', function upgrade(request, socket, head) {
     wss.handleUpgrade(request, socket, head, function done(ws) {
         wss.emit('connection', ws, request);
@@ -123,29 +124,6 @@ wss.on('connection', function connection(ws, req) {
             //blacklist
             ws.close();
         }
-
-
-        /* if (validator.protocolCheck(msg)){
-            let message = validator.comProtExtract(msg).data
-            gralUtils.logInfo("incomming ws msg: " + message)
-            if (message.startsWith('BI-INSTRUCTION:')) {
-                if (!wsConns.get("BI_COMPUTER")) {
-                    gralUtils.logInfo("BI_COMPUTER web client not connected!")
-                } else {
-                    let { ws, obs } = wsConns.get("BI_COMPUTER")
-                    let comProt = validator.getComProt();
-                    comProt.data = message.replace("BI-INSTRUCTION:", "")
-                    ws.send(comProt.prepare())
-                    gralUtils.logInfo('Instruction to BI sent!')
-                }
-            } else {
-                obs.redirect(message)
-            }
-        } else {
-            gralUtils.logInfo('Wrong communication protocols structure!')
-            gralUtils.logInfo(msg)
-            ws.send('You are and intruder, authorities has been adviced!')
-        } */
     });
 
     ws.on('limited', msg => {
@@ -201,7 +179,6 @@ var validate = async (req, res, next) => {
 app.use(validate)
 
 app.post('/exec', async (req, res, next) => {
-
     let message = "All good!"
     if (!wsConns.get("raspberry")) {
         severity = 1
@@ -214,7 +191,6 @@ app.post('/exec', async (req, res, next) => {
     severity = 3;
     //gralUtils.logInfo(JSON.stringify(response))
     res.json(response)
-
 })
 
 app.use(function (req, res, next) {
@@ -227,11 +203,8 @@ app.use(function (req, res, next) {
 })
 
 server.listen(8888, function () {
-
     let host = server.address().address
     let port = server.address().port
-
     utils.logInfo(`Started voice command app, listening at port ${port}`)
-
 })
 

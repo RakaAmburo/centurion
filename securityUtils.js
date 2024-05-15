@@ -107,7 +107,7 @@ class validator {
     }
 
     static async tokenIsNotValidWithBearer(token) {
-        token = token.replace(/Bearer /g, '')
+        token = token?.replace(/Bearer /g, '')
         return this.tokenIsNotValid(token)
     }
 
