@@ -146,14 +146,14 @@ wsClient.start(serverIp, "")
 app.use(json());
 app.post('/alert', async (req, res) => {
   if (req.body.dest == clientId) {
-    if (req.body.message == "PULL_RESTART"){
+    if (req.body.message == "PULL_RESTART") {
       utils.pullFromGitAndRestart()
       res.json({ status: 'processing!' });
-    } else if(req.body.message == "TEST_UDP"){
-      let resp = await udpTransceiver.transceive("BALCONY_ON")
+    } else {
+      let resp = await udpTransceiver.transceive(req.body.message)
       res.json({ status: resp });
     }
-    
+
   } else {
     let payload = validator.getPayloadStructure(req.body.message, validator.WSType.INST)
     wsClient.send(payload.prepareToSend());
