@@ -45,7 +45,7 @@ const wss = new WebSocketServer({
     maxPayload: 450,
     verifyClient: async (info, callback) => {
         try {
-            utils.logInfo("Verify Client:")
+            utils.logInfo("Verifying Client!")
             let clientId = info.req.headers['client-id']
             let token = info.req.headers.authorization
             if (wsConns.get(clientId)) {
@@ -121,7 +121,7 @@ wss.on('connection', function connection(ws, req) {
             }
         } else {
             utils.logInfo("Closing web socket due to an invalid protocol!!!")
-            //blacklist
+            //blacklist when stable
             ws.close();
         }
     });
@@ -163,15 +163,17 @@ var validate = async (req, res, next) => {
     //utils.logInfo("endpint auth token: " + req.headers['authorization'])
     try {
         utils.logInfo("checking ip: " + req.ip)
-        if (await validator.isblackListed(req.ip)){
+        if (await validator.isblackListed(req.ip)) {
             return res.status(403).send('Not authorized!');
         }
         if (await validator.tokenIsNotValidWithBearer(req.headers['authorization'])) {
             utils.logInfo("token not authorized: " + req.headers['authorization'])
+            //blacklist when stable
             return res.sendStatus(401)
         }
     } catch (error) {
         utils.logError(error)
+        //blacklist when stable?
         return res.sendStatus(404)
     }
     next();
@@ -179,18 +181,27 @@ var validate = async (req, res, next) => {
 app.use(validate)
 
 app.post('/exec', async (req, res, next) => {
-    let message = "All good!"
-    if (!wsConns.get("raspberry")) {
-        severity = 1
-        message = "raspberry not connected!"
+
+    if (req.body.dest == "raspberry") {
+        let ws = wsConns.get("raspberry")
+        let payload = validator
+            .getPayloadStructure(req.body.message, validator.WSType.INST)
+        ws.send(payload.prepareToSend())
+        res.json({ "events": [{ "id": "someId", "severity": 0, "message": "OK" }] })
+    } else {
+        let message = "All good!"
+        if (!wsConns.get("raspberry")) {
+            severity = 1
+            message = "raspberry not connected!"
+        }
+        let response
+        //response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"
+        //await postHanler(req)
+        response = { "events": [{ "id": "someId", "severity": severity, "message": message }] }
+        severity = 3;
+        //gralUtils.logInfo(JSON.stringify(response))
+        res.json(response)
     }
-    let response
-    //response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"
-    //await postHanler(req)
-    response = { "events": [{ "id": "someId", "severity": severity, "message": message }] }
-    severity = 3;
-    //gralUtils.logInfo(JSON.stringify(response))
-    res.json(response)
 })
 
 app.use(function (req, res, next) {

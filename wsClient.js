@@ -75,7 +75,9 @@ wsClient.start = (ip) => {
       let extracted = validator.protocolExtract(message)
       if (extracted.type == validator.WSType.RESP) {
         responseObserver.notifyResponse(extracted.taskId, extracted.message)
-      }
+      } else if (extracted.type == validator.WSType.INST){
+        udpTransceiver.transmit(extracted.message)
+      } 
     } else {
       utils.logError("protocol check failed!!!")
     }
