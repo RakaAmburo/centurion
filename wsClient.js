@@ -60,8 +60,8 @@ wsClient.start = (ip) => {
   wss.on('close', async function () {
     utils.logInfo(`ws connection to  closed`);
     clearTimeout(this.pingTimeout);
-    await sleep(10000)
-    wsClient.start(serverIp, "status")
+    await utils.wait(10000)
+    wsClient.start(serverIp)
   });
 
   wss.on('error', function (error) {
@@ -99,12 +99,6 @@ wsClient.send = (message) => {
 
 wsClient.isConnected = () => {
   return wss && wss.readyState === WebSocket.OPEN
-}
-
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
 }
 
 wsClient.start(serverIp)
