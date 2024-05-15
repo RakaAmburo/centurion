@@ -7,7 +7,8 @@ class responseObserver {
         return observer.listen()
     }
     static notifyResponse(id, message) {
-        this.#observers.get(id).notify(message)
+        this.#observers.get(id)?.notify(message)
+        this.#observers.delete(id)
     }
     static #getResponseObserver(timeOut, errMessage) {
         class Listener {

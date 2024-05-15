@@ -11,6 +11,8 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const clientId = process.env.WEBSOCKET_CLIENT_ID
+import udpTransceiver from './udpTransceiver.js';
+udpTransceiver.init(8284, 8285, 8286)
 
 var privateKey = readFileSync(__dirname + '/certs/SAN/client-key.pem', 'utf8');
 var certificate = readFileSync(__dirname + '/certs/SAN/client-crt.pem', 'utf8');
@@ -88,13 +90,12 @@ wsClient.start = (ip, st) => {
     utils.logInfo("incomming raw msg: " + message);
     message = message.toString()
     if (await validator.protocolCheck(message)) {
-
       let extracted = validator.protocolExtract(message)
       if (extracted.type == validator.WSType.RESP) {
         responseObserver.notifyResponse(extracted.taskId, extracted.message)
       }
     } else {
-      utils.logError("protocol fail!")
+      utils.logError("protocol check failed!!!")
     }
     /* if (!validator.protocolCheck(message)) {
      gralUtils.logInfo('Wrong communication protocols structure!')
@@ -145,8 +146,14 @@ wsClient.start(serverIp, "")
 app.use(json());
 app.post('/alert', async (req, res) => {
   if (req.body.dest == clientId) {
-    utils.pullFromGitAndRestart()
-    res.json({ status: 'processing!' });
+    if (req.body.message == "PULL_RESTART"){
+      utils.pullFromGitAndRestart()
+      res.json({ status: 'processing!' });
+    } else if(req.body.message == "TEST_UDP"){
+      let resp = await udpTransceiver.transceive("BALCONY_ON")
+      res.json({ status: resp });
+    }
+    
   } else {
     let payload = validator.getPayloadStructure(req.body.message, validator.WSType.INST)
     wsClient.send(payload.prepareToSend());
