@@ -6,6 +6,7 @@
     "moment": "^2.29.4",
     "random": "^4.1.0",
     "simple-git": "^3.24.0",
+    "string-similarity": "^4.0.4",
     "ws": "^8.15.1",
     "ws-rate-limit": "^0.0.0"
   }

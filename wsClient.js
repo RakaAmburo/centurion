@@ -4,6 +4,7 @@ import responseObserver from './responseObserver.js';
 import WebSocket from 'ws';
 import { readFileSync } from 'fs';
 import utils from './commonUtils.js';
+import commands from './commands/commandConstructor.js';
 import express, { json } from 'express';
 const app = express();
 import { fileURLToPath } from 'url';
@@ -75,9 +76,9 @@ wsClient.start = (ip) => {
       let extracted = validator.protocolExtract(message)
       if (extracted.type == validator.WSType.RESP) {
         responseObserver.notifyResponse(extracted.taskId, extracted.message)
-      } else if (extracted.type == validator.WSType.INST){
+      } else if (extracted.type == validator.WSType.INST) {
         udpTransceiver.transmit(extracted.message)
-      } 
+      }
     } else {
       utils.logError("protocol check failed!!!")
     }
