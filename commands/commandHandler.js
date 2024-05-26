@@ -4,7 +4,7 @@ import stringSimilarity from "string-similarity"
 var execEnabled = true
 const args = []
 
-let postHanler = async (possibleCommands, commands) => {
+let requestHandler = async (possibleCommands, commands) => {
     let phraseKeyMap = commands.phraseKeyMap
     let fixedCmds = possibleCommands.map((cmd) => {
         let voiceCmd = cmd.toLowerCase()
@@ -84,4 +84,4 @@ async function delayAndEnableExec() {
     }, 1500);
 };
 
-export default postHanler;
+export default requestHandler;

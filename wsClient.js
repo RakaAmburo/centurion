@@ -5,6 +5,7 @@ import WebSocket from 'ws';
 import { readFileSync } from 'fs';
 import utils from './commonUtils.js';
 import commands from './commands/commandConstructor.js';
+import requestHandler from './commands/commandHandler.js';
 import express, { json } from 'express';
 const app = express();
 import { fileURLToPath } from 'url';
@@ -109,7 +110,10 @@ wsClient.start(serverIp)
 //http server
 app.use(json());
 app.post('/alert', async (req, res) => {
-  if (req.body.dest == clientId) {
+  let possibleCmds = req.body.possibleMessages
+  res.json(requestHandler(possibleCmds, commands))
+
+  /* if (req.body.dest == clientId) {
     if (req.body.message == "PULL_RESTART") {
       utils.pullFromGitAndRestart()
       res.json({ status: 'processing!' });
@@ -124,7 +128,7 @@ app.post('/alert', async (req, res) => {
     let response = await responseObserver
       .listenResponseOrFail(payload.getId(), 2000, "Centurion not responding!")
     res.json({ status: response });
-  }
+  } */
 });
 
 const PORT = process.env.PORT || 8181;
