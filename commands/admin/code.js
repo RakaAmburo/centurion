@@ -13,8 +13,7 @@ let code = {
         func: async (data) => {
             let ret
             if (data.args[0] == data.env) {
-                console.log("git update and restart")
-                //utils.pullFromGitAndRestart()
+                utils.pullFromGitAndRestart()
                 ret = 'processing!'
             } else {
                 ret = await forward(data, data.args[0])
