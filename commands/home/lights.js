@@ -12,7 +12,7 @@ let lights = {
                 "off": async () => await udpTransceiver.transceive("BALCONY_OFF"),
                 "status": async () => await udpTransceiver.transceive("BALCONY_STATUS")
             }
-            resp = await options[data.args[0]]
+            resp = await options[data.args[0]]()
             return [resp]
         }
     }
