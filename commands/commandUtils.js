@@ -12,7 +12,7 @@ class CommandUtils {
         }
         let payload = validator.getPayloadStructure(data.originalMatchingAllConditions, validator.WSType.INST)
         client.send(payload.prepareToSend());
-        response = await responseObserver
+        let response = await responseObserver
             .listenResponseOrFail(payload.getId(), 2000, dest + " not responding!")
         return response
     }
