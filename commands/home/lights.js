@@ -1,6 +1,5 @@
 import udpTransceiver from "../../udpTransceiver.js"
 
-udpTransceiver
 
 let lights = {
     'REGEX:balcony.lights.(?<arg0>on|off|status)': {

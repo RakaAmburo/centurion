@@ -4,7 +4,7 @@ import stringSimilarity from "string-similarity"
 var execEnabled = true
 const args = []
 
-let requestHandler = async (possibleCommands, commands) => {
+let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clientId) => {
     let phraseKeyMap = commands.phraseKeyMap
     let fixedCmds = possibleCommands.map((cmd) => {
         let voiceCmd = cmd.toLowerCase()
@@ -61,7 +61,9 @@ let requestHandler = async (possibleCommands, commands) => {
         }
         let data = {}
         data.args = args
-        data.env = "raspberry"
+        data.env = clientId
+        data.wsConns = wsConns
+        data.wsClient = wsClient
         data.originalMatchingAllConditions = originalMatchingAllConditions
         response.status = await (commands[cmdToRun[0]] || commands['common.phrase.not.found'])(data)//wsConns, allKeys, args
         delayAndEnableExec()

@@ -9,6 +9,8 @@ import utils from './commonUtils.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import validator from './securityUtils.js';
+import requestHandler from './commands/commandHandler.js';
+import commands from './commands/commandConstructor.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -108,7 +110,12 @@ wss.on('connection', function connection(ws, req) {
         utils.logInfo("incomming raw message: " + payload)
         if (await validator.protocolCheck(payload)) {
             let extracted = validator.protocolExtract(payload)
-            if (extracted.message == "alert bath") {
+
+            let cmdResponse = await requestHandler([extracted.message], commands, wsConns, null, "server")
+            let response = validator
+                .getPayloadStructure(cmdResponse, validator.WSType.RESP, extracted.taskId)
+            ws.send(response.prepareToSend())
+            /* if (extracted.message == "alert bath") {
                 severity = 1;
                 let response = validator
                     .getPayloadStructure("alert received!", validator.WSType.RESP, extracted.taskId)
@@ -118,7 +125,7 @@ wss.on('connection', function connection(ws, req) {
                 let response = validator
                     .getPayloadStructure("instruction processed!", validator.WSType.RESP, extracted.taskId)
                 ws.send(response.prepareToSend())
-            }
+            } */
         } else {
             utils.logInfo("Closing web socket due to an invalid protocol!!!")
             //blacklist when stable

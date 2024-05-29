@@ -1,6 +1,5 @@
-import validator from "../../securityUtils.js"
-import responseObserver from "../../responseObserver.js"
 import utils from "../../commonUtils.js"
+import CommandUtils from "../commandUtils.js"
 
 let code = {
     'test.one.thing': {
@@ -17,14 +16,14 @@ let code = {
                 utils.pullFromGitAndRestart()
                 ret = 'processing!'
             } else {
-                ret = await forward(data, data.args[0])
+                ret = await CommandUtils.forward(data, data.args[0])
             }
             return [ret]
         }
     }
 }
 
-async function forward(data, dest) {
+/* async function forward(data, dest) {
     let client
     if (data.env == "server") {
         client = data.wsConns.get(dest)
@@ -37,5 +36,5 @@ async function forward(data, dest) {
         .listenResponseOrFail(payload.getId(), 2000, dest + " not responding!")
     return response
 }
-
+ */
 export default code
