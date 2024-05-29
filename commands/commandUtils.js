@@ -1,6 +1,6 @@
 
 import validator from "../securityUtils.js"
-import responseObserver from "../../responseObserver.js"
+import responseObserver from "../responseObserver.js"
 
 class CommandUtils {
     static async forward(data, dest){
