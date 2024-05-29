@@ -11,11 +11,11 @@ import { dirname } from 'path';
 import validator from './securityUtils.js';
 import requestHandler from './commands/commandHandler.js';
 import commands from './commands/commandConstructor.js';
+import MessageQueue from './messageQueue.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-var severity = 3;
 
 var privateKey = readFileSync(__dirname + '/certs/SAN/server.key', 'utf8');
 var certificate = readFileSync(__dirname + '/certs/SAN/server.crt', 'utf8');
@@ -198,14 +198,14 @@ app.post('/exec', async (req, res, next) => {
     } else {
         let message = "All good!"
         if (!wsConns.get("raspberry")) {
-            severity = 1
+            MessageQueue.severity = 1
             message = "raspberry not connected!"
         }
         let response
         //response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"
         //await postHanler(req)
-        response = { "events": [{ "id": "someId", "severity": severity, "message": message }] }
-        severity = 3;
+        response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": message }] }
+        MessageQueue.severity = 3;
         //gralUtils.logInfo(JSON.stringify(response))
         res.json(response)
     }

@@ -74,7 +74,7 @@ let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clien
         }
     } else {
         response.appliedCmd = "none"
-        response.status = ["conscutive request with millis apart not allowed"]
+        response.status = ["consecutive requests with millis apart not allowed"]
     }
 
     return response

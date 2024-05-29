@@ -1,4 +1,5 @@
 import CommandUtils from "../commandUtils.js"
+import MessageQueue from "../../messageQueue.js"
 
 let detectors = {
     'bath.movement.detected': {
@@ -7,8 +8,8 @@ let detectors = {
         func: async (data) => {
             let resp
             if (data.env == "server") {
-                //severity 1 o poner en la cola de mensajes
-                ret = 'alert received!'
+                MessageQueue.severity = 1
+                resp = 'alert received!'
             } else {
                 resp = await CommandUtils.forward(data, "server")
             }
