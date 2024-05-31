@@ -112,7 +112,7 @@ wss.on('connection', function connection(ws, req) {
         if (await validator.protocolCheck(payload)) {
             let extracted = validator.protocolExtract(payload)
             if (extracted.type == validator.WSType.RESP) {
-                utils.logInfo("Response from client")
+                utils.logInfo("Response from client: " + extracted.message)
                 responseObserver.notifyResponse(extracted.taskId, extracted.message)
             } else if (extracted.type == validator.WSType.INST) {
                 utils.logInfo("Instruction from client")
@@ -199,7 +199,7 @@ app.use(validate)
 app.post('/exec', async (req, res, next) => {
     let possibleCmds = req.body.possibleMessages
     let cmdResponse = await requestHandler(possibleCmds, commands, wsConns, null, "server")
-    utils.logInfo("cmdResponse: " + cmdResponse)
+    utils.logInfo("cmdResponse: " + cmdResponse[0])
     let response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": cmdResponse[0] }] }
     res.json(response)
     /* if (req.body.dest == "raspberry") {
