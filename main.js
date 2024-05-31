@@ -72,6 +72,7 @@ const wss = new WebSocketServer({
 server.on('upgrade', function upgrade(request, socket, head) {
     console.log('Upgrade request received');
     wss.handleUpgrade(request, socket, head, (ws) => {
+        console.log('llamanding upgrade');
         wss.emit('connection', ws, request);
     });
 })
