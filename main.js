@@ -65,8 +65,7 @@ const wss = new WebSocketServer({
             utils.logInfo(error)
             callback(false, 404, 'Not Found');
         }
-        console.log("antes del callback")
-        callback(true);
+        //callback(true);
     }
 });
 
