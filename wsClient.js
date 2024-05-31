@@ -78,7 +78,10 @@ wsClient.start = (ip) => {
       if (extracted.type == validator.WSType.RESP) {
         responseObserver.notifyResponse(extracted.taskId, extracted.message)
       } else if (extracted.type == validator.WSType.INST) {
-        udpTransceiver.transmit(extracted.message)
+        let cmdResponse = await requestHandler([extracted.message], commands, null, wsClient, clientId)
+        let response = validator
+                .getPayloadStructure(cmdResponse, validator.WSType.RESP, extracted.taskId)
+            ws.send(response.prepareToSend())
       }
     } else {
       utils.logError("protocol check failed!!!")

@@ -38,7 +38,7 @@ let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clien
             } else {
                 var similarity = stringSimilarity.compareTwoStrings(phrase, voiceCmd);
                 if (similarity > 0.85) {
-                    utils.logInfo(similarity);
+                    utils.logInfo("Similarity: " + similarity);
                     cmdToRun[index++] = phraseKeyMap[phrase]
                     return true
                 }

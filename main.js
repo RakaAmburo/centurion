@@ -12,6 +12,7 @@ import validator from './securityUtils.js';
 import requestHandler from './commands/commandHandler.js';
 import commands from './commands/commandConstructor.js';
 import MessageQueue from './messageQueue.js';
+import responseObserver from './responseObserver.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -74,7 +75,7 @@ server.on('upgrade', function upgrade(request, socket, head) {
     });
 })
 
-const respObserver = (timeout, errMessage) => {
+/* const respObserver = (timeout, errMessage) => {
     return {
         res: null,
         redirect: (message) => {
@@ -93,7 +94,7 @@ const respObserver = (timeout, errMessage) => {
             ])
         }
     }
-}
+} */
 
 wss.on('connection', function connection(ws, req) {
     utils.logInfo("remote address: " + req.socket.remoteAddress)
@@ -103,18 +104,24 @@ wss.on('connection', function connection(ws, req) {
     let clientId = req.headers['client-id']
     ws.on('pong', (new heartbeat).getMechanism(clientId, ws));
     utils.logInfo("ws connected " + clientId)
-    let obs = respObserver(4000, "web socket time out")
+    //let obs = respObserver(4000, "web socket time out")
     wsConns.set(clientId, ws)
     ws.on('message', async function incoming(payload) {
         payload = payload.toString()
         utils.logInfo("incomming raw message: " + payload)
         if (await validator.protocolCheck(payload)) {
             let extracted = validator.protocolExtract(payload)
+            if (extracted.type == validator.WSType.RESP) {
+                responseObserver.notifyResponse(extracted.taskId, extracted.message)
+            } else if (extracted.type == validator.WSType.INST) {
+                let cmdResponse = await requestHandler([extracted.message], commands, wsConns, null, "server")
+                let response = validator
+                    .getPayloadStructure(cmdResponse, validator.WSType.RESP, extracted.taskId)
+                ws.send(response.prepareToSend())
+            }
 
-            let cmdResponse = await requestHandler([extracted.message], commands, wsConns, null, "server")
-            let response = validator
-                .getPayloadStructure(cmdResponse, validator.WSType.RESP, extracted.taskId)
-            ws.send(response.prepareToSend())
+
+
             /* if (extracted.message == "alert bath") {
                 severity = 1;
                 let response = validator
@@ -188,8 +195,11 @@ var validate = async (req, res, next) => {
 app.use(validate)
 
 app.post('/exec', async (req, res, next) => {
-
-    if (req.body.dest == "raspberry") {
+    let possibleCmds = req.body.possibleMessages
+    let cmdResponse = await requestHandler(possibleCmds, commands, wsConns, null, "server")
+    response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": cmdResponse[0] }] }
+    res.json(response)
+    /* if (req.body.dest == "raspberry") {
         let ws = wsConns.get("raspberry")
         let payload = validator
             .getPayloadStructure(req.body.message, validator.WSType.INST)
@@ -208,7 +218,7 @@ app.post('/exec', async (req, res, next) => {
         MessageQueue.severity = 3;
         //gralUtils.logInfo(JSON.stringify(response))
         res.json(response)
-    }
+    } */
 })
 
 app.use(function (req, res, next) {
