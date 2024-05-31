@@ -46,7 +46,7 @@ class heartbeat {
 const wss = new WebSocketServer({
     noServer: true,
     maxPayload: 450,
-    verifyClient: async (info, callback) => {
+    verifyClient: async (info, callback) => {// test this
         try {
             utils.logInfo("Verifying Client!")
             let clientId = info.req.headers['client-id']
@@ -54,8 +54,7 @@ const wss = new WebSocketServer({
             if (wsConns.get(clientId)) {
                 utils.logInfo(`${clientId} allready connected, so rejecting!`)
                 callback(false, 401, 'Unauthorized');
-            }
-            if (await validator.tokenIsNotValidWithBearer(token)) {
+            } else if (await validator.tokenIsNotValidWithBearer(token)) {
                 utils.logInfo(`token (${token}) not authorized from ${clientId}`)
                 callback(false, 401, 'Unauthorized');
             } else {
@@ -65,14 +64,11 @@ const wss = new WebSocketServer({
             utils.logInfo(error)
             callback(false, 404, 'Not Found');
         }
-        //callback(true);
     }
 });
 
 server.on('upgrade', function upgrade(request, socket, head) {
-    console.log('Upgrade request received');
     wss.handleUpgrade(request, socket, head, (ws) => {
-        console.log('llamanding upgrade');
         wss.emit('connection', ws, request);
     });
 })
@@ -200,10 +196,10 @@ app.use(validate)
 
 app.get('/status', async (req, res, next) => {
     let message = "All good!"
-        if (!wsConns.get("raspberry")) {
-            MessageQueue.severity = 1
-            message = "raspberry not connected!"
-        }
+    if (!wsConns.get("raspberry")) {
+        MessageQueue.severity = 1
+        message = "raspberry not connected!"
+    }
     let response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": "All good not imp" }] }
     MessageQueue.severity = 3
     res.json(response)
