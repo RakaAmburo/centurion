@@ -44,7 +44,7 @@ class heartbeat {
 }
 
 const wss = new WebSocketServer({
-    noServer: true,
+    noServer: false,
     maxPayload: 450,
     verifyClient: async (info, callback) => {
         try {
