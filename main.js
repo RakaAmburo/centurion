@@ -1,5 +1,5 @@
 import { createServer } from 'https';
-import WebSocket, { WebSocketServer } from 'ws';
+import { WebSocketServer } from 'ws';
 import { readFileSync } from 'fs';
 import express, { json } from 'express';
 const app = express();
@@ -43,7 +43,7 @@ class heartbeat {
     }
 }
 
-const wss = new WebSocket.Server({
+const wss = new WebSocketServer({
     noServer: true,
     maxPayload: 450,
     verifyClient: async (info, callback) => {
