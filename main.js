@@ -1,5 +1,5 @@
 import { createServer } from 'https';
-import { WebSocketServer } from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import { readFileSync } from 'fs';
 import express, { json } from 'express';
 const app = express();
