@@ -80,7 +80,7 @@ wsClient.start = (ip) => {
       } else if (extracted.type == validator.WSType.INST) {
         let cmdResponse = await requestHandler([extracted.message], commands, null, wsClient, clientId)
         let response = validator
-          .getPayloadStructure(cmdResponse.status, validator.WSType.RESP, extracted.taskId)//deberia poderse mandar un mensaje complejo?
+          .getPayloadStructure(cmdResponse.status[0], validator.WSType.RESP, extracted.taskId)//deberia poderse mandar un mensaje complejo?
         wsClient.send(response.prepareToSend())
       }
     } else {
