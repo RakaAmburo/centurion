@@ -196,6 +196,17 @@ var validate = async (req, res, next) => {
 }
 app.use(validate)
 
+app.get('/status', async (req, res, next) => {
+    let message = "All good!"
+        if (!wsConns.get("raspberry")) {
+            MessageQueue.severity = 1
+            message = "raspberry not connected!"
+        }
+    let response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": "All good not imp" }] }
+    MessageQueue.severity = 3
+    res.json(response)
+})
+
 app.post('/exec', async (req, res, next) => {
     let possibleCmds = req.body.possibleMessages
     let cmdResponse = await requestHandler(possibleCmds, commands, wsConns, null, "server")

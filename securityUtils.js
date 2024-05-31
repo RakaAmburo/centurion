@@ -149,7 +149,7 @@ class validator {
         sentTimestamp = moment.unix(sentTimestamp)
         let actualTimeStamp = moment()
         let diff = actualTimeStamp.diff(sentTimestamp, 'seconds')
-        return diff >= 0 && diff <= 20
+        return diff >= 0 && diff <= 120
     }
 
     /**
