@@ -80,8 +80,8 @@ wsClient.start = (ip) => {
       } else if (extracted.type == validator.WSType.INST) {
         let cmdResponse = await requestHandler([extracted.message], commands, null, wsClient, clientId)
         let response = validator
-                .getPayloadStructure(cmdResponse, validator.WSType.RESP, extracted.taskId)
-            ws.send(response.prepareToSend())
+          .getPayloadStructure(cmdResponse, validator.WSType.RESP, extracted.taskId)
+        wsClient.send(response.prepareToSend())
       }
     } else {
       utils.logError("protocol check failed!!!")
