@@ -69,7 +69,7 @@ const wss = new WebSocketServer({
     }
 });
 
-server.on('upgrade', function upgrade(request, socket, head) {
+/* server.on('upgrade', function upgrade(request, socket, head) {
     console.log('Upgrade request received');
     
     // Asegúrate de que `handleUpgrade` no se llama más de una vez
@@ -82,7 +82,7 @@ server.on('upgrade', function upgrade(request, socket, head) {
     } else {
         console.log('Upgrade already handled for this socket');
     }
-})
+}) */
 
 /* const respObserver = (timeout, errMessage) => {
     return {
