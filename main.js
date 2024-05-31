@@ -70,9 +70,18 @@ const wss = new WebSocketServer({
 });
 
 server.on('upgrade', function upgrade(request, socket, head) {
-    wss.handleUpgrade(request, socket, head, function done(ws) {
-        wss.emit('connection', ws, request);
-    });
+    console.log('Upgrade request received');
+    
+    // Asegúrate de que `handleUpgrade` no se llama más de una vez
+    if (!socket.upgradeHandled) {
+        socket.upgradeHandled = true;
+        
+        wss.handleUpgrade(request, socket, head, (ws) => {
+            wss.emit('connection', ws, request);
+        });
+    } else {
+        console.log('Upgrade already handled for this socket');
+    }
 })
 
 /* const respObserver = (timeout, errMessage) => {
