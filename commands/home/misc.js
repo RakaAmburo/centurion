@@ -1,4 +1,4 @@
-
+import MessageQueue from "../../messageQueue"
 
 let misc = {
     'tell.status': {
