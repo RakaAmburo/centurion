@@ -209,7 +209,7 @@ app.post('/exec', async (req, res, next) => {
     let possibleCmds = req.body.possibleMessages
     utils.logInfo("possibleMessages: " + possibleCmds)
     let cmdResponse = await requestHandler(possibleCmds, commands, wsConns, null, "server")
-    utils.logInfo("cmdResponse: " + cmdResponse)
+    utils.logInfo("cmdResponse: " + cmdResponse.status[0])
     let response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": cmdResponse.status[0] }] }
     res.json(response)
     /* if (req.body.dest == "raspberry") {
