@@ -12,7 +12,7 @@ let misc = {
             }
             let response
             response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": message }] }
-            MessageQueue.severity = 3;
+            //MessageQueue.severity = 3;
             return ["Some alert detected"]
         }
     }
