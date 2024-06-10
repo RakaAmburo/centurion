@@ -66,8 +66,13 @@ let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clien
         data.wsConns = wsConns
         data.wsClient = wsClient
         data.originalMatchingAllConditions = originalMatchingAllConditions
-        //poner try and catch
-        response.status = await (commands[cmdToRun[0]] || commands['common.phrase.not.found'])(data)//wsConns, allKeys, args
+        try {
+            response.status = await (commands[cmdToRun[0]] || commands['common.phrase.not.found'])(data)//wsConns, allKeys, args
+        } catch (error) {
+            utils.logError("Error executing command:")
+            utils.logError(error)
+        }
+        
         delayAndEnableExec()
         if (cmdToRun[0]) {
             response.appliedCmd = cmdToRun[0].replace(/\./g, ' ')
