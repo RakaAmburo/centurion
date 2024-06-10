@@ -1,6 +1,6 @@
 import utils from "../commonUtils.js"
 import stringSimilarity from "string-similarity"
-import wordsToNumbers from  "words-to-numbers"
+import {wordsToNumbers} from  "words-to-numbers"
 
 var execEnabled = true
 const args = []

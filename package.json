@@ -7,6 +7,7 @@
     "random": "^4.1.0",
     "simple-git": "^3.24.0",
     "string-similarity": "^4.0.4",
+    "words-to-numbers": "^1.5.1",
     "ws": "^8.15.1",
     "ws-rate-limit": "^0.0.0"
   }
