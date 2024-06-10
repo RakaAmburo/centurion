@@ -20,7 +20,7 @@ let lights = {
             return [resp]
         }
     },
-    'REGEX:switch.(?<arg0>on|two).(?<arg1>on|off|status)': {
+    'REGEX:switch.(?<arg0>one|two).(?<arg1>on|off|status)': {
         skipFolderName: true,
         func: async (data) => {
             let resp
