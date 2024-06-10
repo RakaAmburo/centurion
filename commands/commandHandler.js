@@ -19,13 +19,13 @@ let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clien
     args.splice(0, args.length)
     Object.keys(phraseKeyMap).forEach(function (phrase) {
         fixedCmds.some(voiceCmd => {
-            originalMatchingAllConditions = voiceCmd
             if (phrase.includes('REGEX:')) {
                 let phraseOk = phrase.replace(/\REGEX:/, '');
                 phraseOk = `^${phraseOk}$`
                 //console.log("-" + phraseOk + "-" + voiceCmd + "-")
                 let matched = voiceCmd.match(new RegExp(phraseOk))
                 if (matched) {
+                    originalMatchingAllConditions = voiceCmd
                     let varNum = 0
                     while (matched.groups['arg' + varNum]) {
                         args.push(matched.groups['arg' + varNum])
@@ -38,6 +38,7 @@ let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clien
             } else {
                 var similarity = stringSimilarity.compareTwoStrings(phrase, voiceCmd);
                 if (similarity > 0.85) {
+                    originalMatchingAllConditions = voiceCmd
                     utils.logInfo("Similarity: " + similarity);
                     cmdToRun[index++] = phraseKeyMap[phrase]
                     return true
@@ -65,6 +66,7 @@ let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clien
         data.wsConns = wsConns
         data.wsClient = wsClient
         data.originalMatchingAllConditions = originalMatchingAllConditions
+        //poner try and catch
         response.status = await (commands[cmdToRun[0]] || commands['common.phrase.not.found'])(data)//wsConns, allKeys, args
         delayAndEnableExec()
         if (cmdToRun[0]) {
