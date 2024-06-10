@@ -1,5 +1,6 @@
 import utils from "../commonUtils.js"
 import stringSimilarity from "string-similarity"
+import wordsToNumbers from  "words-to-numbers"
 
 var execEnabled = true
 const args = []
@@ -8,7 +9,7 @@ let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clien
     let phraseKeyMap = commands.phraseKeyMap
     let fixedCmds = possibleCommands.map((cmd) => {
         let voiceCmd = cmd.toLowerCase()
-        //voiceCmd = wordsToNumbers(voiceCmd)
+        voiceCmd = wordsToNumbers(voiceCmd)
         utils.logInfo("voice cmd: " + voiceCmd)
         return voiceCmd
     })
