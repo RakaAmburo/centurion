@@ -33,6 +33,7 @@ let lights = {
                     "status": async () => await udpTransceiver.transceive("BALCONY_STATUS")
                 }
                 let key = "1" + "-" + data.args[0]
+                console.log(key)
                 resp = await options[key]()
             }
             return [resp]
