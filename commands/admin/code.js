@@ -8,7 +8,7 @@ let code = {
             return ['processing!']
         }
     },
-    'REGEX:(?<arg0>raspberry|server|asus).pull.and.restart': {
+    'REGEX:(?<arg0>raspberry|server|asus).update.and.restart': {
         skipFolderName: true,
         func: async (data) => {
             let ret
