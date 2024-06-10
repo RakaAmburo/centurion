@@ -20,7 +20,7 @@ let lights = {
             return [resp]
         }
     },
-    'REGEX:switch.one.(?<arg0>on|off|status)': {
+    'REGEX:switch.(?<arg0>on|two).(?<arg1>on|off|status)': {
         skipFolderName: true,
         func: async (data) => {
             let resp
@@ -32,7 +32,7 @@ let lights = {
                     "1-off": async () => await udpTransceiver.transceive("SWITCH_1_OFF"),
                     "status": async () => await udpTransceiver.transceive("BALCONY_STATUS")
                 }
-                let key = "1" + "-" + data.args[0]
+                let key = data.args[0] + "-" + data.args[1]
                 resp = await options[key]()
             }
             return [resp]
