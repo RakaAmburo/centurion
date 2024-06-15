@@ -30,7 +30,14 @@ let lights = {
                 let options = {
                     "1-on": async () => await udpTransceiver.transceive("SWITCH_1_ON"),
                     "1-off": async () => await udpTransceiver.transceive("SWITCH_1_OFF"),
-                    "status": async () => await udpTransceiver.transceive("BALCONY_STATUS")
+                    "status": async () => await udpTransceiver.transceive("BALCONY_STATUS"),
+                    "2-on": async () => await udpTransceiver.transceive("SWITCH_2_ON"),
+                    "2-off": async () => await udpTransceiver.transceive("SWITCH_2_OFF"),
+                    "3-on": async () => await udpTransceiver.transceive("SWITCH_3_ON"),
+                    "3-off": async () => await udpTransceiver.transceive("SWITCH_3_OFF"),
+                    "4-on": async () => await udpTransceiver.transceive("SWITCH_4_ON"),
+                    "4-off": async () => await udpTransceiver.transceive("SWITCH_4_OFF")
+                
                 }
                 let key = data.args[0] + "-" + data.args[1]
                 resp = await options[key]()
