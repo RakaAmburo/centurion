@@ -13,7 +13,6 @@ import requestHandler from './commands/commandHandler.js';
 import commands from './commands/commandConstructor.js';
 import MessageQueue from './messageQueue.js';
 import responseObserver from './responseObserver.js';
-import MessageQueue from './messageQueue.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
