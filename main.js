@@ -199,7 +199,7 @@ app.get('/status', async (req, res, next) => {
     if (!wsConns.get("raspberry")) {
         MessageQueue.prepareAndEnqueue(1, "raspberry not connected!")
     }
-    let response = { "events": MessageQueue.dequeueAll() }
+    let response = { "events": await MessageQueue.dequeueAll() }
     res.json(response)
 })
 
