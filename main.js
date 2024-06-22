@@ -13,6 +13,7 @@ import requestHandler from './commands/commandHandler.js';
 import commands from './commands/commandConstructor.js';
 import MessageQueue from './messageQueue.js';
 import responseObserver from './responseObserver.js';
+import MessageQueue from './messageQueue.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -197,11 +198,9 @@ app.use(validate)
 app.get('/status', async (req, res, next) => {
     let message = "All good!"
     if (!wsConns.get("raspberry")) {
-        MessageQueue.severity = 1
-        message = "raspberry not connected!"
+        MessageQueue.prepareAndEnqueue(1, "raspberry not connected!")
     }
-    let response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": "All good not imp" }] }
-    MessageQueue.severity = 3
+    let response = { "events": MessageQueue.dequeueAll() }
     res.json(response)
 })
 
