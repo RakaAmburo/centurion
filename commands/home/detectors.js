@@ -8,7 +8,7 @@ let detectors = {
         func: async (data) => {
             let resp
             if (data.env == "server") {
-                MessageQueue.severity = 1
+                MessageQueue.prepareAndEnqueue(1, "Bath movement detected!")
                 resp = 'alert received!'
             } else {
                 resp = await CommandUtils.forward(data, "server")

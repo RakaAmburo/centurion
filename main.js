@@ -197,7 +197,7 @@ app.use(validate)
 app.get('/status', async (req, res, next) => {
     let message = "All good!"
     if (!wsConns.get("raspberry")) {
-        MessageQueue.prepareAndEnqueue(1, "raspberry not connected!")
+        await MessageQueue.prepareAndEnqueue(1, "raspberry not connected!")
     }
     let response = { "events": await MessageQueue.dequeueAll() }
     res.json(response)
@@ -211,26 +211,6 @@ app.post('/exec', async (req, res, next) => {
     let response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": cmdResponse.status[0] }] }
     MessageQueue.severity = 3
     res.json(response)
-    /* if (req.body.dest == "raspberry") {
-        let ws = wsConns.get("raspberry")
-        let payload = validator
-            .getPayloadStructure(req.body.message, validator.WSType.INST)
-        ws.send(payload.prepareToSend())
-        res.json({ "events": [{ "id": "someId", "severity": 0, "message": "OK" }] })
-    } else {
-        let message = "All good!"
-        if (!wsConns.get("raspberry")) {
-            MessageQueue.severity = 1
-            message = "raspberry not connected!"
-        }
-        let response
-        //response = "{\"events\":[{\"id\":\"articles\",\"severity\":\"1\",\"message\":\"All good\"}]}"
-        //await postHanler(req)
-        response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": message }] }
-        MessageQueue.severity = 3;
-        //gralUtils.logInfo(JSON.stringify(response))
-        res.json(response)
-    } */
 })
 
 app.use(function (req, res, next) {

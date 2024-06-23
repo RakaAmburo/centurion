@@ -15,7 +15,6 @@ class MessageQueue {
     const release = await this.mutex.acquire();
     try {
       this.queue.push(item);
-      console.log(`Enqueued: ${item}`);
     } finally {
       release();
     }
