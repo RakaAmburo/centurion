@@ -1,7 +1,7 @@
 import udpTransceiver from "../../udpTransceiver.js"
 import CommandUtils from "../commandUtils.js"
 import utils from "../../commonUtils.js"
-
+//caca
 
 let lights = {
     'test.all.switches': {
