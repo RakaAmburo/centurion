@@ -21,7 +21,6 @@ let lights = {
                     udpTransceiver.transmit("SWITCH_2_OFF")
                     udpTransceiver.transmit("SWITCH_3_OFF")
                     let finalStatus = udpTransceiver.transceive("SWITCH_4_OFF")
-                    MessageQueue.transceive(3, "Swithces: " + finalStatus)
                 }
                 utils.delayAndExec(10, turnAllOff, "turning all switches off")
             }
