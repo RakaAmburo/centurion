@@ -77,4 +77,11 @@ utils.pullFromGitAndRestart = () => {
     })
 }
 
+utils.delayAndExec = (seconds, executor, doWhat) => {
+    setTimeout(() => {
+        executor()
+    }, seconds * 1000);
+    return `executing ${doWhat} in ${seconds} secs!`
+}
+
 export default utils

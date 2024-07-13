@@ -3,6 +3,22 @@ import CommandUtils from "../commandUtils.js"
 
 
 let lights = {
+    'test.four.switches': {
+        skipFolderName: true,
+        func: async (data) => {
+            let resp
+            if (data.env == "server") {
+                resp = await CommandUtils.forward(data, "raspberry")
+            } else {
+                udpTransceiver.transmit("SWITCH_1_ON")
+                udpTransceiver.transmit("SWITCH_2_ON")
+                udpTransceiver.transmit("SWITCH_3_ON")
+                let finalStatus = await udpTransceiver.transceive("SWITCH_4_ON")
+                
+            }
+            return [finalStatus]
+        }
+    },
     'REGEX:balcony.lights.(?<arg0>on|off|status)': {
         skipFolderName: true,
         func: async (data) => {
