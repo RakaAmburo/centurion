@@ -3,7 +3,7 @@ import CommandUtils from "../commandUtils.js"
 
 
 let lights = {
-    'test.four.switches': {
+    'test.all.switches': {
         skipFolderName: true,
         func: async (data) => {
             let resp
