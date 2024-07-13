@@ -1,7 +1,6 @@
 import udpTransceiver from "../../udpTransceiver.js"
 import CommandUtils from "../commandUtils.js"
 import utils from "../../commonUtils.js"
-import MessageQueue from "../../messageQueue.js"
 
 
 let lights = {
