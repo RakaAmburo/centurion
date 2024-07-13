@@ -1,5 +1,7 @@
 import udpTransceiver from "../../udpTransceiver.js"
 import CommandUtils from "../commandUtils.js"
+import utils from "../../commonUtils.js"
+import MessageQueue from "../../messageQueue.js"
 
 
 let lights = {
@@ -13,10 +15,18 @@ let lights = {
                 udpTransceiver.transmit("SWITCH_1_ON")
                 udpTransceiver.transmit("SWITCH_2_ON")
                 udpTransceiver.transmit("SWITCH_3_ON")
-                let finalStatus = await udpTransceiver.transceive("SWITCH_4_ON")
-                
+                resp = await udpTransceiver.transceive("SWITCH_4_ON")
+
+                let turnAllOff = () => {
+                    udpTransceiver.transmit("SWITCH_1_OFF")
+                    udpTransceiver.transmit("SWITCH_2_OFF")
+                    udpTransceiver.transmit("SWITCH_3_OFF")
+                    let finalStatus = udpTransceiver.transceive("SWITCH_4_OFF")
+                    MessageQueue.transceive(3, "Swithces: " + finalStatus)
+                }
+                utils.delayAndExec(10, func, "turning all switches off")
             }
-            return [finalStatus]
+            return [resp]
         }
     },
     'REGEX:balcony.lights.(?<arg0>on|off|status)': {
@@ -53,7 +63,7 @@ let lights = {
                     "3-off": async () => await udpTransceiver.transceive("SWITCH_3_OFF"),
                     "4-on": async () => await udpTransceiver.transceive("SWITCH_4_ON"),
                     "4-off": async () => await udpTransceiver.transceive("SWITCH_4_OFF")
-                
+
                 }
                 let key = data.args[0] + "-" + data.args[1]
                 resp = await options[key]()
