@@ -23,7 +23,7 @@ let lights = {
                     let finalStatus = udpTransceiver.transceive("SWITCH_4_OFF")
                     MessageQueue.transceive(3, "Swithces: " + finalStatus)
                 }
-                utils.delayAndExec(10, func, "turning all switches off")
+                utils.delayAndExec(10, turnAllOff, "turning all switches off")
             }
             return [resp]
         }
