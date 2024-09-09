@@ -74,7 +74,7 @@ let lights = {
         func: async (data) => {
             let resp
             
-            return [data.extraParas.knocks]
+            return [data.extraParams.knocks]
         }
     }
 }
