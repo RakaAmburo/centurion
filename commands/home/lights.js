@@ -69,7 +69,7 @@ let lights = {
             return [resp]
         }
     }, 
-    'exec.knock': {
+    'execute.knock': {
         skipFolderName: true,
         func: async (data) => {
             let resp
