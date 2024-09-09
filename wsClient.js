@@ -134,6 +134,12 @@ app.post('/alert', async (req, res) => {
   } */
 });
 
+app.post('/exec', async (req, res) => {
+  let possibleCmds = req.body.possibleMessages
+  let extraParams = req.body.extras
+  res.json(await requestHandler(possibleCmds, commands, null, wsClient, clientId, extraParams))
+});
+
 const PORT = process.env.PORT || 8181;
 app.listen(PORT, () => {
   console.log(`Servidor JSON corriendo en el puerto ${PORT}`);

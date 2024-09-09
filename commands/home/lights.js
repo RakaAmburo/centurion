@@ -16,11 +16,11 @@ let lights = {
                 udpTransceiver.transmit("SWITCH_3_ON")
                 resp = await udpTransceiver.transceive("SWITCH_4_ON")
 
-                let turnAllOff = () => {
+                let turnAllOff = async () => {
                     udpTransceiver.transmit("SWITCH_1_OFF")
                     udpTransceiver.transmit("SWITCH_2_OFF")
                     udpTransceiver.transmit("SWITCH_3_OFF")
-                    let finalStatus = udpTransceiver.transceive("SWITCH_4_OFF")
+                    let finalStatus = await udpTransceiver.transceive("SWITCH_4_OFF")
                 }
                 utils.delayAndExec(10, turnAllOff, "turning all switches off")
             }
@@ -67,6 +67,14 @@ let lights = {
                 resp = await options[key]()
             }
             return [resp]
+        }
+    }, 
+    'exec.knock': {
+        skipFolderName: true,
+        func: async (data) => {
+            let resp
+            
+            return ["knock done"]
         }
     }
 }

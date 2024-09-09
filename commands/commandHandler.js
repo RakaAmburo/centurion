@@ -5,7 +5,7 @@ import {wordsToNumbers} from  "words-to-numbers"
 var execEnabled = true
 const args = []
 
-let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clientId) => {
+let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clientId, extraParams) => {
     let phraseKeyMap = commands.phraseKeyMap
     let fixedCmds = possibleCommands.map((cmd) => {
         let voiceCmd = cmd.toLowerCase()
@@ -66,6 +66,7 @@ let requestHandler = async (possibleCommands, commands, wsConns, wsClient, clien
         data.env = clientId
         data.wsConns = wsConns
         data.wsClient = wsClient
+        data.extraParams = extraParams
         data.originalMatchingAllConditions = originalMatchingAllConditions
         try {
             response.status = await (commands[cmdToRun[0]] || commands['common.phrase.not.found'])(data)//wsConns, allKeys, args
