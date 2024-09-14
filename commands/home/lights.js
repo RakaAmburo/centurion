@@ -73,7 +73,7 @@ let lights = {
         skipFolderName: true,
         func: async (data) => {
             let resp
-            
+            utils.logInfo("incomming raw msg: " + data.extraParams.knocks);
             return [data.extraParams.knocks]
         }
     }
