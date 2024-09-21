@@ -9,14 +9,14 @@ function convertSeries(series) {
 
     // Iterar sobre los números y comparar los consecutivos
     for (let i = 1; i < numbers.length; i++) {
-        const difference = Math.abs(numbers[i] - numbers[i - 1]);
+        const difference = numbers[i] - numbers[i - 1];  // Diferencia real (no absoluta)
         
-        if (difference < 50) {
-            result += '-';  // Diferencia menor a 5
+        if (Math.abs(difference) < 50) {
+            result += '=';  // Diferencia menor a 50
         } else if (difference > 50) {
-            result += '+';  // Diferencia entre 5 y 49
+            result += '+';  // Diferencia mayor a 50 y positiva
         } else {
-            result += '=';  // Diferencia mayor o igual a 50
+            result += '-';  // Diferencia mayor a 50 y negativa
         }
     }
 
