@@ -2,6 +2,26 @@ import udpTransceiver from "../../udpTransceiver.js"
 import CommandUtils from "../commandUtils.js"
 import utils from "../../commonUtils.js"
 
+function convertSeries(series) {
+    // Divide la serie de números por los dos puntos ":"
+    const numbers = series.split(":").map(Number);
+    let result = '';
+
+    // Iterar sobre los números y comparar los consecutivos
+    for (let i = 1; i < numbers.length; i++) {
+        const difference = Math.abs(numbers[i] - numbers[i - 1]);
+        
+        if (difference < 50) {
+            result += '-';  // Diferencia menor a 5
+        } else if (difference > 50) {
+            result += '+';  // Diferencia entre 5 y 49
+        } else {
+            result += '=';  // Diferencia mayor o igual a 50
+        }
+    }
+
+    return result;
+}
 
 let lights = {
     'test.all.switches': {
@@ -73,7 +93,7 @@ let lights = {
         skipFolderName: true,
         func: async (data) => {
             let resp
-            utils.logInfo("incomming raw msg: " + data.extraParams.knocks);
+            utils.logInfo("incomming raw msg: " + convertSeries(data.extraParams.knocks));
             return [data.extraParams.knocks]
         }
     }
