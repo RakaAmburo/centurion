@@ -94,6 +94,11 @@ let lights = {
         func: async (data) => {
             let resp
             utils.logInfo("incomming raw msg: " + convertSeries(data.extraParams.knocks));
+            if (data.extraParams.knocks == "-=++-"){
+                udpTransceiver.transceive("SWITCH_1_ON")
+            } else if (data.extraParams.knocks == "+=-+="){
+                udpTransceiver.transceive("SWITCH_1_OFF")
+            }
             return [data.extraParams.knocks]
         }
     }
