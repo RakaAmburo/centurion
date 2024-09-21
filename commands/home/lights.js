@@ -93,10 +93,11 @@ let lights = {
         skipFolderName: true,
         func: async (data) => {
             let resp
-            utils.logInfo("incomming raw msg: " + convertSeries(data.extraParams.knocks));
-            if (data.extraParams.knocks == "-=++-"){
+            let signal = convertSeries(data.extraParams.knocks)
+            utils.logInfo("incomming raw msg: " + signal);
+            if (signal == "-=++-"){
                 udpTransceiver.transceive("SWITCH_1_ON")
-            } else if (data.extraParams.knocks == "+=-+="){
+            } else if (signal == "+=-+="){
                 udpTransceiver.transceive("SWITCH_1_OFF")
             }
             return [data.extraParams.knocks]
