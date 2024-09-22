@@ -98,7 +98,11 @@ let lights = {
             if (signal == "-=++-"){
                 udpTransceiver.transceive("SWITCH_1_ON")
             } else if (signal == "+=-+="){
-                udpTransceiver.transceive("SWITCH_1_OFF")
+                udpTransceiver.transceive("SWITCH_2_ON")
+            }else if (signal == "-+-===="){
+                udpTransceiver.transceive("SWITCH_3_ON")
+            }else if (signal == "====-+-"){
+                udpTransceiver.transceive("SWITCH_4_ON")
             }
             return [data.extraParams.knocks]
         }
