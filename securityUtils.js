@@ -149,6 +149,7 @@ class validator {
         sentTimestamp = moment.unix(sentTimestamp)
         let actualTimeStamp = moment()
         let diff = actualTimeStamp.diff(sentTimestamp, 'seconds')
+        gralUtils.logInfo("diff time: " + diff)
         return diff >= 0 && diff <= 30
     }
 
