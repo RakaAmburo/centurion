@@ -10,7 +10,7 @@ function convertSeries(series) {
     // Iterar sobre los números y comparar los consecutivos
     for (let i = 1; i < numbers.length; i++) {
         const difference = numbers[i] - numbers[i - 1];  // Diferencia real (no absoluta)
-        
+
         if (Math.abs(difference) < 50) {
             result += '=';  // Diferencia menor a 50
         } else if (difference > 50) {
@@ -64,7 +64,7 @@ let lights = {
             return [resp]
         }
     },
-    'REGEX:laundry.(?<arg0>fan|light).(?<arg1>on|off|status)': {
+    'REGEX:laundry.(?<arg0>fan|light|all).(?<arg1>on|off|status)': {
         skipFolderName: true,
         func: async (data) => {
             let resp
@@ -76,7 +76,7 @@ let lights = {
                     "fan-off": async () => await udpTransceiver.transceive("LAUNDRY_FAN_OFF"),
                     "light-on": async () => await udpTransceiver.transceive("LAUNDRY_LIGHT_ON"),
                     "light-off": async () => await udpTransceiver.transceive("LAUNDRY_LIGHT_OFF"),
-                    "status": async () => await udpTransceiver.transceive("LAUNDRY_STATUS")
+                    "all-status": async () => await udpTransceiver.transceive("LAUNDRY_STATUS")
                 }
                 let key = data.args[0] + "-" + data.args[1]
                 resp = await options[key]()
@@ -108,28 +108,28 @@ let lights = {
             }
             return [resp]
         }
-    }, 
+    },
     'execute.knock': {
         skipFolderName: true,
         func: async (data) => {
             let resp
             let signal = convertSeries(data.extraParams.knocks)
             utils.logInfo("incomming raw msg: " + signal);
-            if (signal == "-=++-"){
+            if (signal == "-=++-") {
                 udpTransceiver.transceive("SWITCH_1_ON")
-            } else if (signal == "+=-+="){
+            } else if (signal == "+=-+=") {
                 udpTransceiver.transceive("SWITCH_2_ON")
-            }else if (signal == "-+-===="){
+            } else if (signal == "-+-====") {
                 udpTransceiver.transceive("SWITCH_3_ON")
-            }else if (signal == "+-+-=-"){
+            } else if (signal == "+-+-=-") {
                 udpTransceiver.transceive("SWITCH_4_ON")
-            }else if (signal == "-=++-+"){
+            } else if (signal == "-=++-+") {
                 udpTransceiver.transceive("SWITCH_1_OFF")
-            }else if (signal == "+=-+=+"){
+            } else if (signal == "+=-+=+") {
                 udpTransceiver.transceive("SWITCH_2_OFF")
-            }else if (signal == "-+-====+"){
+            } else if (signal == "-+-====+") {
                 udpTransceiver.transceive("SWITCH_3_OFF")
-            }else if (signal == "+-+-=-+"){
+            } else if (signal == "+-+-=-+") {
                 udpTransceiver.transceive("SWITCH_4_OFF")
             }
             return [data.extraParams.knocks]
