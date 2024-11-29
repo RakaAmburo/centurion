@@ -75,7 +75,7 @@ let lights = {
                     "fan-on": async () => await udpTransceiver.transceive("LAUNDRY_FAN_ON"),
                     "fan-off": async () => await udpTransceiver.transceive("LAUNDRY_FAN_OFF"),
                     "light-on": async () => await udpTransceiver.transceive("LAUNDRY_LIGHT_ON"),
-                    "ligth-off": async () => await udpTransceiver.transceive("LAUNDRY_LIGHT_OFF"),
+                    "light-off": async () => await udpTransceiver.transceive("LAUNDRY_LIGHT_OFF"),
                     "status": async () => await udpTransceiver.transceive("LAUNDRY_STATUS")
                 }
                 let key = data.args[0] + "-" + data.args[1]
