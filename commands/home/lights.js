@@ -64,7 +64,7 @@ let lights = {
             return [resp]
         }
     },
-    'REGEX:laundry.(?<arg0>fan|light).(?<arg0>on|off|status)': {
+    'REGEX:laundry.(?<arg0>fan|light).(?<arg1>on|off|status)': {
         skipFolderName: true,
         func: async (data) => {
             let resp
@@ -78,7 +78,8 @@ let lights = {
                     "ligth-off": async () => await udpTransceiver.transceive("LAUNDRY_LIGHT_OFF"),
                     "status": async () => await udpTransceiver.transceive("LAUNDRY_STATUS")
                 }
-                resp = await options[data.args[0]]()
+                let key = data.args[0] + "-" + data.args[1]
+                resp = await options[key]()
             }
             return [resp]
         }
