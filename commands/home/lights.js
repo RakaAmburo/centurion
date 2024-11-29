@@ -64,6 +64,25 @@ let lights = {
             return [resp]
         }
     },
+    'REGEX:laundry.(?<arg0>fan|light).(?<arg0>on|off|status)': {
+        skipFolderName: true,
+        func: async (data) => {
+            let resp
+            if (data.env == "server") {
+                resp = await CommandUtils.forward(data, "raspberry")
+            } else {
+                let options = {
+                    "fan-on": async () => await udpTransceiver.transceive("LAUNDRY_FAN_ON"),
+                    "fan-off": async () => await udpTransceiver.transceive("LAUNDRY_FAN_OFF"),
+                    "light-on": async () => await udpTransceiver.transceive("LAUNDRY_LIGHT_ON"),
+                    "ligth-off": async () => await udpTransceiver.transceive("LAUNDRY_LIGHT_OFF"),
+                    "status": async () => await udpTransceiver.transceive("LAUNDRY_STATUS")
+                }
+                resp = await options[data.args[0]]()
+            }
+            return [resp]
+        }
+    },
     'REGEX:switch.(?<arg0>[1-4]{1}).(?<arg1>on|off|status)': {
         skipFolderName: true,
         func: async (data) => {
