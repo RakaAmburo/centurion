@@ -45,8 +45,8 @@ wsClient.start = (ip) => {
     protocolVersion: 8,
     origin: `wss://${ip}:${wsPort}`,
     rejectUnauthorized: false,
-    //key: privateKey,
-    //cert: certificate,
+    key: privateKey,
+    cert: certificate,
     headers: {
       "authorization": validator.generateTokenWithBearer(),
       "client-id": clientId
