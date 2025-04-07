@@ -22,10 +22,10 @@ var privateKey = readFileSync(__dirname + '/certs/SAN/server.key', 'utf8');
 var certificate = readFileSync(__dirname + '/certs/SAN/server.crt', 'utf8');
 var clientCert = [readFileSync(__dirname + '/certs/SAN/client-ca-crt.pem', 'utf8')]
 var options = {
-    key: privateKey,
-    cert: certificate,
-    ca: clientCert,
-    requestCert: false
+    //key: privateKey,
+    //cert: certificate,
+    //ca: clientCert,
+    //requestCert: false
 };
 var server = createServer(options, app)
 
