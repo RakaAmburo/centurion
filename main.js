@@ -25,7 +25,7 @@ var options = {
     key: privateKey,
     cert: certificate,
     ca: clientCert,
-    requestCert: true
+    requestCert: false
 };
 var server = createServer(options, app)
 
