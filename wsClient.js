@@ -67,7 +67,7 @@ wsClient.start = (ip) => {
   });
 
   wss.on('error', function (error) {
-    utils.logError("Socket client error: " + error.message)
+    utils.logError("Socket client error: " + error)
   });
 
   wss.on('message', async function incoming(message) {
