@@ -1,10 +1,10 @@
 //Create certificates for the server
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt -subj "/C=ES/ST=BA/L=Lehi/O=MYCOMP, Inc./OU=BA/CN=automation.xyz"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt -config config.cfg
 
 //Create certificates for the clients
-openssl req -new -passout pass:"PedritoClavo1Clavito" -x509 -days 365 -keyout client-ca-key.pem -out client-ca-crt.pem -subj "/C=ES/ST=BA/L=Lehi/O=MYCOMP, Inc./OU=BA/CN=automation.xyz"
+openssl req -new -passout pass:"PedritoClavo1Clavito" -x509 -days 365 -keyout client-ca-key.pem -out client-ca-crt.pem -subj "/C=ES/ST=Madrid/L=Madrid/O=JCEA/OU=JCEA/CN=automation.xyz"
 openssl genrsa -out client-key.pem 4096
-openssl req -new -sha256 -key client-key.pem -out client-csr.pem -subj "/C=ES/ST=BA/L=Lehi/O=MYCOMP, Inc./OU=BA/CN=client.automation.xyz"
+openssl req -new -sha256 -key client-key.pem -out client-csr.pem -subj "/C=ES/ST=Madrid/L=Madrid/O=JCEA/OU=JCEA/CN=client.automation.xyz"
 openssl x509 -req -days 365 -in client-csr.pem -CA client-ca-crt.pem -CAkey client-ca-key.pem -CAcreateserial -out client-crt.pem -passin pass:"PedritoClavo1Clavito"
 openssl verify -CAfile client-ca-crt.pem client-crt.pem
 
@@ -28,3 +28,26 @@ cert: fs.readFileSync(`${__dirname}/certs/server-crt.pem`),
 openssl in windows
 https://stackoverflow.com/questions/50625283/how-to-install-openssl-in-windows-10
 choco install openssl
+
+
+config.cfg:
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = ES
+ST = Madrid
+L = Madrid
+O = JCEA
+OU = JCEA
+CN = automation.xyz
+
+[v3_req]
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = automation.xyz
+IP.1 = server ip
