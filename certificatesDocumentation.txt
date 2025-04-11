@@ -29,6 +29,8 @@ openssl in windows
 https://stackoverflow.com/questions/50625283/how-to-install-openssl-in-windows-10
 choco install openssl
 
+archivos faltanes en:
+caja tirada automationFiles
 
 config.cfg:
 [req]
