@@ -2,7 +2,7 @@ import utils from "../../commonUtils.js"
 import CommandUtils from "../commandUtils.js"
 
 let code = {
-    'test.1.thing': {
+    'store.new.token': {
         skipFolderName: true,
         func: async (data) => {
             console.log("worked")
