@@ -2,7 +2,7 @@ import utils from "../../commonUtils.js"
 import CommandUtils from "../commandUtils.js"
 
 let code = {
-    'test.one.thing': {
+    'test.1.thing': {
         skipFolderName: true,
         func: async (data) => {
             console.log("worked")
