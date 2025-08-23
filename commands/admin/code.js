@@ -6,6 +6,7 @@ let code = {
         skipFolderName: true,
         func: async (data) => {
             console.log("worked")
+            console.log(data.extraParams.token)
             return ['processing!']
         }
     },

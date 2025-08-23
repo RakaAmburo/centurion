@@ -205,8 +205,9 @@ app.get('/status', async (req, res, next) => {
 
 app.post('/exec', async (req, res, next) => {
     let possibleCmds = req.body.possibleMessages
+    let extraParams = req.body.extras
     utils.logInfo("possibleMessages: " + possibleCmds)
-    let cmdResponse = await requestHandler(possibleCmds, commands, wsConns, null, "server")
+    let cmdResponse = await requestHandler(possibleCmds, commands, wsConns, null, "server", extraParams)
     utils.logInfo("cmdResponse: " + cmdResponse.status[0])
     let response = { "events": [{ "id": "someId", "severity": MessageQueue.severity, "message": cmdResponse.status[0] }] }
     MessageQueue.severity = 3
