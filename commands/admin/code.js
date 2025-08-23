@@ -3,6 +3,7 @@ import CommandUtils from "../commandUtils.js"
 
 let code = {
     'test.one.thing': {
+        skipFolderName: true,
         func: async (data) => {
             console.log("worked")
             return ['processing!']
