@@ -1,6 +1,6 @@
 import utils from "../../commonUtils.js"
 import CommandUtils from "../commandUtils.js"
-import { sendNotification } from '../fbMessageSender.js';
+import { sendNotification } from '../../fbMessageSender.js';
 
 let code = {
     'test.notification': {
