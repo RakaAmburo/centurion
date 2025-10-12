@@ -1,7 +1,27 @@
 import utils from "../../commonUtils.js"
 import CommandUtils from "../commandUtils.js"
+import { sendNotification } from './fbMessageSender.js';
 
 let code = {
+    'test.notification': {
+        skipFolderName: true,
+        func: async (data) => {
+            let resp
+            if (data.env == "server") {
+                resp = await CommandUtils.forward(data, "raspberry")
+            } else {
+               try {
+                   await sendNotification("Test", "Senidng test notification");
+                   resp = 'Sending!'
+               } catch (error) {
+                   //console.error("--- TEST FALLIDO ---");
+                   resp = "Error: " + error.message;
+                   //console.error("Detalle del error:", error.message);
+               }
+            }
+            return [resp]
+        }
+    },
     'store.new.token': {
         skipFolderName: true,
         func: async (data) => {
