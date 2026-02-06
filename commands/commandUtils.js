@@ -10,7 +10,7 @@ class CommandUtils {
         } else {
             client = data.wsClient
         }
-        let payload = validator.getPayloadStructure(data.originalMatchingAllConditions, validator.WSType.INST)
+        let payload = validator.getPayloadStructure(data.originalMatchingAllConditions, validator.WSType.INST, null, data.extraParams)
         client.send(payload.prepareToSend());
         let response = await responseObserver
             .listenResponseOrFail(payload.getId(), 2000, dest + " not responding!")

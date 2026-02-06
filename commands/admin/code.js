@@ -22,12 +22,20 @@ let code = {
             return [resp]
         }
     },
-    'store.new.token': {
+    'store.new.token': {//agregar accion para guardar token y avisar que se cambio con alerta para reiniciar
         skipFolderName: true,
         func: async (data) => {
-            console.log("worked")
-            console.log(data.extraParams?.token)
-            return ['processing!']
+            let resp
+            if (data.env == "server") {
+                console.log("tk recieved worked")
+                console.log(data.extraParams?.token)
+                resp = await CommandUtils.forward(data, "raspberry")
+            } else {
+                console.log("tk recieved worked in rasp")
+                console.log(data.extraParams?.token)
+                resp = 'toked arrived to rasp'
+            }
+            return [resp]
         }
     },
     'REGEX:(?<arg0>raspberry|server|asus).update.and.restart': {

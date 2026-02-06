@@ -78,7 +78,7 @@ wsClient.start = (ip) => {
       if (extracted.type == validator.WSType.RESP) {
         responseObserver.notifyResponse(extracted.taskId, extracted.message)
       } else if (extracted.type == validator.WSType.INST) {
-        let cmdResponse = await requestHandler([extracted.message], commands, null, wsClient, clientId)
+        let cmdResponse = await requestHandler([extracted.message], commands, null, wsClient, clientId, message.parameters)// agregar aqui extra params al final
         let response = validator
           .getPayloadStructure(cmdResponse.status[0], validator.WSType.RESP, extracted.taskId)//deberia poderse mandar un mensaje complejo?
         wsClient.send(response.prepareToSend())
