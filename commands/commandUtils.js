@@ -1,6 +1,7 @@
 
 import validator from "../securityUtils.js"
 import responseObserver from "../responseObserver.js"
+import utils from "../commonUtils.js"
 
 class CommandUtils {
     static async forward(data, dest) {
@@ -20,6 +21,8 @@ class CommandUtils {
     //executeAndPost(setToken, (result) => ({\"possibleMessages\":[\"home bath movement detected\"]}), 'miTokenABC');
     static async execAndAlert(fn, resultBuilder, ...params) {
         console.log("antes de ejecutar")
+        utils.wait(1500)
+
 
         try {
             const result = fn(...params);
