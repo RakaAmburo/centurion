@@ -1,6 +1,7 @@
 import utils from "../../commonUtils.js"
 import CommandUtils from "../commandUtils.js"
 import { sendNotification } from '../../fbMessageSender.js';
+import { setToken } from '../../fbTokenManager.js';
 
 let code = {
     'test.notification': {
@@ -33,7 +34,7 @@ let code = {
             } else {
                 console.log("tk recieved worked in rasp")
                 console.log(data.extraParams?.token)
-                resp = 'toked arrived to rasp'
+                resp = setToken(data.extraParams?.token)
             }
             return [resp]
         }

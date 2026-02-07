@@ -48,14 +48,19 @@ function writeTokenToDisk(token) {
  * @param {string} newToken - El nuevo token a almacenar.
  */
 export function setToken(newToken) {
+    let resp = "Error!"
     if (newToken && newToken !== _currentToken) {
         _currentToken = newToken;
-        writeTokenToDisk(newToken);
+        resp = writeTokenToDisk(newToken);
         
         // Aquí deberías añadir la lógica para re-inicializar el SDK de Firebase
         // usando el 'newToken' si es necesario.
         console.log(`Token actualizado en memoria: ${_currentToken.substring(0, 10)}...`);
+    } else {
+        resp = "blank or repited!"
     }
+
+    return resp
 }
 
 /**
