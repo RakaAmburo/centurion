@@ -20,16 +20,17 @@ class CommandUtils {
     //executeAndPost(setToken, (result) => ({\"possibleMessages\":[\"home bath movement detected\"]}), 'miTokenABC');
     static async execAndAlert(fn, resultBuilder, ...params) {
         console.log("antes de ejecutar")
-        
+
         try {
             const result = fn(...params);
             console.log(result)
             const postData = resultBuilder(result);
-            await fetch('http://192.168.1.135:8181/alert', {
+            const response = await fetch('http://192.168.1.135:8181/alert', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(postData)
             });
+            console.log('Respuesta:', await response.text());
         } catch (error) {
             console.log("fallo al enviar post", error);
         }
