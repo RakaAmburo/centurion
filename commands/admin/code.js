@@ -2,6 +2,7 @@ import utils from "../../commonUtils.js"
 import CommandUtils from "../commandUtils.js"
 import { sendNotification } from '../../fbMessageSender.js';
 import { setToken } from '../../fbTokenManager.js';
+import MessageQueue from "../../messageQueue.js"
 
 let code = {
     'test.notification': {
@@ -23,7 +24,7 @@ let code = {
             return [resp]
         }
     },
-    'store.new.token': {//agregar accion para guardar token y avisar que se cambio con alerta para reiniciar
+    'store.new.token': {
         skipFolderName: true,
         func: async (data) => {
             let resp
@@ -34,7 +35,22 @@ let code = {
             } else {
                 console.log("tk recieved worked in rasp")
                 console.log(data.extraParams?.token)
-                resp = setToken(data.extraParams?.token)
+                let resutBuilder = (result) => ({"possibleMessages":["new token saved"], "extras": {"status": result}})
+                CommandUtils.execAndAlert(setToken, resutBuilder , data.extraParams?.token)
+                resp = "processing new token!"
+            }
+            return [resp]
+        }
+    },
+    'new.token.saved': {
+        skipFolderName: true,
+        func: async (data) => {
+            let resp
+            if (data.env == "server") {
+                MessageQueue.prepareAndEnqueue(1, data.extraParams?.status)
+                resp = 'alert received!'
+            } else {
+                resp = await CommandUtils.forward(data, "server")
             }
             return [resp]
         }

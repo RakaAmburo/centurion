@@ -31,14 +31,17 @@ function readTokenFromDisk() {
 
 // Escribe el token al archivo JSON para persistencia
 function writeTokenToDisk(token) {
+    resp = "Tk Saving Error!"
     try {
         const config = { token: token };
         // Usamos writeFileSync para asegurar que el token se guarda antes de continuar
         fs.writeFileSync(STORE_PATH, JSON.stringify(config, null, 2), 'utf8');
+        resp = "Tk Saved!"
         console.log("Token escrito exitosamente a disco.");
     } catch (e) {
         console.error("Error al escribir el token a disco:", e.message);
     }
+    return resp
 }
 
 // --- Lógica del Módulo (Exposición de funciones) ---
@@ -48,7 +51,7 @@ function writeTokenToDisk(token) {
  * @param {string} newToken - El nuevo token a almacenar.
  */
 export function setToken(newToken) {
-    let resp = "Error!"
+    let resp = "Saving tk Error!"
     if (newToken && newToken !== _currentToken) {
         _currentToken = newToken;
         resp = writeTokenToDisk(newToken);
@@ -57,7 +60,7 @@ export function setToken(newToken) {
         // usando el 'newToken' si es necesario.
         console.log(`Token actualizado en memoria: ${_currentToken.substring(0, 10)}...`);
     } else {
-        resp = "blank or repited!"
+        resp = "Tk blank or repited!"
     }
 
     return resp
