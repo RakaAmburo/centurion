@@ -19,6 +19,7 @@ class CommandUtils {
 
     //executeAndPost(setToken, (result) => ({\"possibleMessages\":[\"home bath movement detected\"]}), 'miTokenABC');
     static async execAndAlert(fn, resultBuilder, ...params) {
+        console.log("antes de ejecutar")
         const result = fn(...params);
         const postData = resultBuilder(result);
         try {
@@ -28,7 +29,7 @@ class CommandUtils {
                 body: JSON.stringify(postData)
             });
         } catch (error) {
-            // Ignorar error o loguearlo
+            console.log("fallo al enviar post", error);
         }
     }
 }
