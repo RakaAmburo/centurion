@@ -21,7 +21,7 @@ class CommandUtils {
     //executeAndPost(setToken, (result) => ({\"possibleMessages\":[\"home bath movement detected\"]}), 'miTokenABC');
     static async execAndAlert(fn, resultBuilder, ...params) {
         console.log("antes de ejecutar")
-        utils.wait(1500)
+        await utils.wait(1500)
 
 
         try {
