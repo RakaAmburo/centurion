@@ -32,7 +32,7 @@ export async function sendNotification(title, body) {
     if (!registrationToken || !title || !body) {
         throw new Error("Faltan parámetros: Se requiere token, título y cuerpo del mensaje.");
     }
-    
+    console.log('token****************:', registrationToken);
     const message = {
         notification: {
             title: title,
