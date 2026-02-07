@@ -23,6 +23,7 @@ class CommandUtils {
         
         try {
             const result = fn(...params);
+            console.log(result)
             const postData = resultBuilder(result);
             await fetch('http://192.168.1.135:8181/alert', {
                 method: 'POST',
