@@ -114,7 +114,8 @@ wsClient.start(serverIp)
 app.use(json());
 app.post('/alert', async (req, res) => {
   let possibleCmds = req.body.possibleMessages
-  res.json(await requestHandler(possibleCmds, commands, null, wsClient, clientId))
+  let extraParams = req.body.extras
+  res.json(await requestHandler(possibleCmds, commands, null, wsClient, clientId, extraParams))
 
   /* if (req.body.dest == clientId) {
     if (req.body.message == "PULL_RESTART") {
