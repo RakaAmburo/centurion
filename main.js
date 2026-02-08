@@ -114,7 +114,7 @@ wss.on('connection', function connection(ws, req) {
                 responseObserver.notifyResponse(extracted.taskId, extracted.message)
             } else if (extracted.type == validator.WSType.INST) {
                 utils.logInfo("Instruction from client")
-                let cmdResponse = await requestHandler([extracted.message], commands, wsConns, null, "server")
+                let cmdResponse = await requestHandler([extracted.message], commands, wsConns, null, "server", extracted.parameters)
                 let response = validator
                     .getPayloadStructure(cmdResponse, validator.WSType.RESP, extracted.taskId)
                 ws.send(response.prepareToSend())

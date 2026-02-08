@@ -47,11 +47,11 @@ let code = {
         func: async (data) => {
             let resp
             if (data.env == "server") {
-                //data.extraParams?.status
-                console.log(data.extraParams)
-                MessageQueue.prepareAndEnqueue(1, "pasa saved!!!")
+                console.log(JSON.stringify(data.extraParams, null, 2));
+                MessageQueue.prepareAndEnqueue(1, data.extraParams?.status)
                 resp = 'alert received!'
             } else {
+                console.log(JSON.stringify(data.extraParams, null, 2));
                 resp = await CommandUtils.forward(data, "server")
             }
             return [resp]
