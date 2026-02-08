@@ -115,6 +115,7 @@ app.use(json());
 app.post('/alert', async (req, res) => {
   let possibleCmds = req.body.possibleMessages
   let extraParams = req.body.extras
+  console.log("entrante: " + extraParams)
   res.json(await requestHandler(possibleCmds, commands, null, wsClient, clientId, extraParams))
 
   /* if (req.body.dest == clientId) {
