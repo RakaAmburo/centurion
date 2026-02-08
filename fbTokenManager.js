@@ -31,7 +31,7 @@ function readTokenFromDisk() {
 
 // Escribe el token al archivo JSON para persistencia
 function writeTokenToDisk(token) {
-    resp = "Tk Saving Error!"
+    let resp = "Tk Saving Error!"
     try {
         const config = { token: token };
         // Usamos writeFileSync para asegurar que el token se guarda antes de continuar
