@@ -6,6 +6,7 @@
     "firebase-admin": "^13.5.0",
     "memcached": "^2.2.2",
     "moment": "^2.29.4",
+    "mqtt": "^5.15.0",
     "random": "^4.1.0",
     "simple-git": "^3.24.0",
     "string-similarity": "^4.0.4",
