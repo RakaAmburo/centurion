@@ -10,8 +10,9 @@ openssl verify -CAfile client-ca-crt.pem client-crt.pem
 
 //Create certificates for Android
 openssl pkcs12 -passout pass:"PedritoClavo1Clavito" -export -in client-crt.pem -inkey client-key.pem -out android.p12 -passin pass:"PedritoClavo1Clavito"
-keytool -importkeystore -srckeystore android.p12 -srcstorepass PedritoClavo1Clavito -srcstoretype pkcs12 -destkeystore android.bks -deststorepass PedritoClavo1Clavito -deststoretype bks -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath "/home/pablo/newTest/bcprov-ext-jdk15on-169.jar"
-keytool -list -keystore "android.bks" -provider org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath "/home/user/newTest/bcprov-ext-jdk15on-169.jar" -storetype BKS -storepass PedritoClavo1Clavito
+//en win
+keytool -importkeystore -srckeystore android.p12 -srcstorepass PedritoClavo1Clavito -srcstoretype pkcs12 -destkeystore android.bks -deststorepass PedritoClavo1Clavito -deststoretype bks -providerclass org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath "bcprov-ext-jdk15on-169.jar"
+keytool -list -keystore "android.bks" -provider org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath "bcprov-ext-jdk15on-169.jar" -storetype BKS -storepass PedritoClavo1Clavito
 
 
 //Sources
