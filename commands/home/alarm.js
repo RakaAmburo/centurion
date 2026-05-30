@@ -15,6 +15,19 @@ let alarm = {
             }
             return [resp]
         }
+    },
+    'REGEX:full.armed.(?<arg0>on|off)': {
+        skipFolderName: true,
+        availableIn: [""],
+        func: async (data) => {
+            let resp
+            if (data.env == "server") {
+                resp = await CommandUtils.forward(data, "raspberry")
+            } else {
+               resp = await publish('casa/alarm/fullarmed', data.args[0].toUpperCase())
+            }
+            return [resp]
+        }
     }
 }
 
