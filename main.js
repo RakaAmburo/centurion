@@ -203,6 +203,13 @@ app.get('/status', async (req, res, next) => {
     res.json(response)
 })
 
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    ok: true,
+    ts: Date.now()
+  });
+});
+
 app.post('/exec', async (req, res, next) => {
     let possibleCmds = req.body.possibleMessages
     let extraParams = req.body.extras
